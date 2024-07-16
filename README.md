@@ -7,7 +7,7 @@
 ### O Banco Comunitário é a favor da inclusão e diversidade, buscando melhorar a qualidade de vida de todos os moradores e fortalecer a economia local.
 
 
-## Semana 1
+### Semana -1
 - [x] Diagrama de modelagem do banco de dados criado
 
 
