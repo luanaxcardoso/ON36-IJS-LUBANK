@@ -8,8 +8,14 @@
 
 ## 📅 Semanas
 
-###  Semana -1
+###  Semana 01
 - ✅ **Diagrama de modelagem do banco de dados criado**
 
-###  Semana -2
+###  Semana 02
 - 🔲 **POO com Typescript**
+  
+### Semana 03
+- 🔲 **API**
+
+### Semana 04
+- 🔲 **Design de Código**
