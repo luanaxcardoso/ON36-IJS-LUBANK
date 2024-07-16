@@ -10,12 +10,23 @@
 
 ###  Semana 01
 - ✅ **Diagrama de modelagem do banco de dados criado**
-
 ###  Semana 02
 - 🔲 **POO com Typescript**
-  
 ### Semana 03
 - 🔲 **API**
-
 ### Semana 04
 - 🔲 **Design de Código**
+### Semana 05
+- 🔲 **Estratégias de Testes**
+### Semana 06
+- 🔲 **Arquitetura**
+### Semana 07
+- 🔲 **Projeto Guiado**
+### Semana 08
+- 🔲 **Banco de Dados**
+### Semana 09
+- 🔲 **Gestão de Erros**
+### Semana 10
+- 🔲 **Metodologias Devops**
+
+
