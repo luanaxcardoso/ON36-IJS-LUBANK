@@ -38,3 +38,10 @@ As classes encapsulam dados e comportamentos relacionados, o que ajuda a protege
 
 ### Flexibilidade
 A estrutura permite adicionar novas funcionalidades facilmente, como novos tipos de contas ou novos métodos de interação entre clientes e contas.
+
+### Herança
+A herança permite reutilizar código e estender funcionalidades de forma simples e eficiente, o que é útil para evitar a repetição de código e facilitar a manutenção.
+
+* private: Propriedades ou métodos que devem ser acessíveis apenas dentro da própria classe.
+* protected: Propriedades ou métodos que devem ser acessíveis dentro da própria classe e subclasses, mas não fora dessas classes.
+* readonly: Propriedades que só podem ser atribuídas durante a inicialização ou no construtor da classe e não podem ser alteradas depois.
