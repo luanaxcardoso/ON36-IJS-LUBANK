@@ -11,7 +11,7 @@
 ###  Semana 01
 - ✅ **Diagrama de modelagem do banco de dados criado**
 ###  Semana 02
-- 🔲 **POO com Typescript**
+- ✅ **POO com Typescript**
 ### Semana 03
 - 🔲 **API**
 ### Semana 04
