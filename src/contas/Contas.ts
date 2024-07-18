@@ -8,10 +8,10 @@ export interface IConta {
 }
 
 export class Conta implements IConta {
-  private readonly id: string;
-  private readonly tipo: string;
+  protected readonly id: string;
+  protected readonly tipo: string;
   protected saldo: number = 0;
-  private readonly cliente: Cliente;
+  protected readonly cliente: Cliente;
 
   constructor(cliente: Cliente, tipo: string) {
     this.cliente = cliente;
@@ -35,7 +35,7 @@ export class Conta implements IConta {
 }
 
 export class ContaCorrente extends Conta {
-  private limiteChequeEspecial: number;
+  protected limiteChequeEspecial: number;
 
   constructor(cliente: Cliente, limiteChequeEspecial: number) {
     super(cliente, "corrente");
