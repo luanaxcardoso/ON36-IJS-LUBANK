@@ -29,7 +29,6 @@ bower_components/
 
 # TypeScript
 *.tsbuildinfo
-dist/
 build/
 
 # Environment variables
