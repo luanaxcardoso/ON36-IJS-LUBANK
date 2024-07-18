@@ -1,21 +1,11 @@
-// src/agencia/Agencia.ts
-import { Cliente } from "../cliente/Cliente";
-
-export interface IAgencia {
-  getId(): string;
-  getNome(): string;
-  getEndereco(): string;
-  getClientes(): Cliente[];
-  adicionarCliente(cliente: Cliente): void;
-  listarClientes(): Cliente[];
-  removerCliente(clienteId: string): boolean;
-}
+import { ICliente } from "../cliente/ICliente";
+import { IAgencia } from "./IAgencia";
 
 export class Agencia implements IAgencia {
-  protected id: string; 
+  protected id: string;
   protected nome: string;
   protected endereco: string;
-  protected clientes: Cliente[] = [];
+  protected clientes: ICliente[] = [];
 
   constructor(id: string, nome: string, endereco: string) {
     this.id = id;
@@ -35,24 +25,36 @@ export class Agencia implements IAgencia {
     return this.endereco;
   }
 
-  getClientes(): Cliente[] {
+  getClientes(): ICliente[] {
     return this.clientes;
   }
 
-  adicionarCliente(cliente: Cliente): void {
+  adicionarCliente(cliente: ICliente): void {
     this.clientes.push(cliente);
   }
 
-  listarClientes(): Cliente[] {
+  listarClientes(): ICliente[] {
     return this.clientes;
   }
 
   removerCliente(clienteId: string): boolean {
-    const index = this.clientes.findIndex(
-      (cliente) => cliente.getId() === clienteId 
-    );
+    const index = this.clientes.findIndex(cliente => cliente.getId() === clienteId);
     if (index !== -1) {
       this.clientes.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  buscarClientePorId(clienteId: string): ICliente | null {
+    const cliente = this.clientes.find(cliente => cliente.getId() === clienteId);
+    return cliente || null;
+  }
+
+  atualizarCliente(clienteAtualizado: ICliente): boolean {
+    const index = this.clientes.findIndex(cliente => cliente.getId() === clienteAtualizado.getId());
+    if (index !== -1) {
+      this.clientes[index] = clienteAtualizado;
       return true;
     }
     return false;

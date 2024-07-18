@@ -1,22 +1,17 @@
-import { Cliente } from "../cliente/Cliente";
-
-export interface IEmprestimo {
-  calcularTotal(): number;
-  quitarEmprestimo(): void;
-  atrasarEmprestimo(): void;
-}
+import { ICliente } from "../cliente/ICliente";
+import { IEmprestimo } from "./IEmprestimo";
 
 export class Emprestimo implements IEmprestimo {
   private id: string;
-  private cliente: Cliente;
+  private cliente: ICliente;
   private valor: number;
-  private taxaJuros: number;
-  private prazo: number;
-  private status: string;
+  private taxaJuros: number; 
+  private prazo: number;     
+  private status: string;    
 
   constructor(
     id: string,
-    cliente: Cliente,
+    cliente: ICliente,
     valor: number,
     taxaJuros: number,
     prazo: number
@@ -30,18 +25,32 @@ export class Emprestimo implements IEmprestimo {
   }
 
   calcularTotal(): number {
-    return 0; 
+   
+    const juros = this.valor * (this.taxaJuros / 100) * (this.prazo / 12); 
+    return this.valor + juros;
   }
 
-  quitarEmprestimo(): void {}
+  quitarEmprestimo(): void {
+    if (this.status === "ativo") {
+      this.status = "quitado";
+    } else {
+      throw new Error("Empréstimo não está ativo ou já foi quitado.");
+    }
+  }
 
-  atrasarEmprestimo(): void {}
+  atrasarEmprestimo(): void {
+    if (this.status === "ativo") {
+      this.status = "atrasado";
+    } else {
+      throw new Error("Empréstimo não está ativo ou já foi quitado.");
+    }
+  }
 
   public getId(): string {
     return this.id;
   }
 
-  public getCliente(): Cliente {
+  public getCliente(): ICliente {
     return this.cliente;
   }
 
