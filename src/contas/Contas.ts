@@ -42,9 +42,6 @@ export class ContaCorrente extends Conta {
     this.limiteChequeEspecial = limiteChequeEspecial;
   }
 
-  sacar(valor: number): boolean {
-    return true;
-  }
 }
 
 export class ContaPoupanca extends Conta {

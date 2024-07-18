@@ -1,3 +1,5 @@
+ Aprendizado de TypeScript
+
  ## Semana 01
 
 ### Diagrama de modelagem do banco de dados criado
