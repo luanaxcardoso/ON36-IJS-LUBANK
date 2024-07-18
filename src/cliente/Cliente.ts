@@ -1,19 +1,5 @@
-import { IConta } from "../contas/Contas";
-
-export interface ICliente {
-  getId(): string;
-  getNome(): string;
-  getCpf(): string;
-  getCnpj(): string | undefined;
-  getDataNascimento(): string; 
-  getEndereco(): string;
-  getTelefone(): string;
-  getEmail(): string;
-  getDataCadastro(): string; 
-  getStatusCliente(): string;
-  getIdAgencia(): string;
-  getContas(): IConta[];
-}
+import { ICliente } from "./ICliente";
+import { IContas } from '../contas/IContas';
 
 export class Cliente implements ICliente {
   protected id: string;
@@ -27,7 +13,7 @@ export class Cliente implements ICliente {
   protected dataCadastro: Date;
   protected statusCliente: string;
   protected idAgencia: string;
-  protected contas: IConta[] = [];
+  protected contas: IContas[] = [];
 
   constructor(
     id: string,
@@ -105,7 +91,35 @@ export class Cliente implements ICliente {
     return this.idAgencia;
   }
 
-  getContas(): IConta[] {
+  getContas(): IContas[] {
     return this.contas;
+  }
+
+  adicionarConta(conta: IContas): void {
+    this.contas.push(conta);
+  }
+
+  removerConta(idConta: string): void {
+    this.contas = this.contas.filter(conta => conta.getId() !== idConta);
+  }
+
+  atualizarNome(nome: string): void {
+    this.nome = nome;
+  }
+
+  atualizarEndereco(endereco: string): void {
+    this.endereco = endereco;
+  }
+
+  atualizarTelefone(telefone: string): void {
+    this.telefone = telefone;
+  }
+
+  atualizarEmail(email: string): void {
+    this.email = email;
+  }
+
+  desativarCliente(): void {
+    this.statusCliente = "Inativo";
   }
 }
