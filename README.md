@@ -4,21 +4,26 @@
 
 ### O Banco Comunitário é a favor da inclusão e diversidade, buscando melhorar a qualidade de vida de todos os moradores e fortalecer a economia local.
 ---
+## Para iniciar o projeto, execute os seguintes comandos:
 
-### Para iniciar o projeto com TypeScript, basta executar o comando para criar o arquivo package.json:
+### Clonar o repositório
+```bash
+git clone [URL_DO_REPOSITORIO]
+```
+### Criar o arquivo package.json:
 ```bash
 npm init -y
 ```
-### Para instalar as dependências do TypeScript, execute o comando:
+### Instalar as dependências do TypeScript:
 ```bash
 npm install
 ```
-### Após a instalação das dependências, compile o projeto TypeScript usando o seguinte comando:
+### Após a instalação das dependências, compile o projeto TypeScript :
 ```bash
 npx tsc
 ```
 
-### Para executar o projeto, use o seguinte comando:
+### Para executar o projeto:
 ```bash
 npm start
 ```
