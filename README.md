@@ -5,8 +5,6 @@
 ### O Banco Comunitário é a favor da inclusão e diversidade, buscando melhorar a qualidade de vida de todos os moradores e fortalecer a economia local.
 ---
 
-### Passo a Passo para Iniciar um Projeto com TypeScript
-
 ### Para iniciar o projeto com TypeScript, basta executar o comando para criar o arquivo package.json:
 ```bash
 npm init -y
