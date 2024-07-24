@@ -20,6 +20,8 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': 'true',
+    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    'linebreak-style': ['error', 'unix'],
   },
 };
