@@ -37,8 +37,10 @@ export class ContaController {
     return this.contaService.atualizarConta(id, tipo);
   }
 
-  @Delete('deletar/:id')
-  deletarConta(@Param('id') id: number): boolean {
-    return this.contaService.deletarConta(id);
+  
+  @Delete('removerporcliente/:clienteId')
+  removerContasPorCliente(@Param('clienteId') clienteId: number): { message: string } {
+    this.contaService.removerContasPorCliente(clienteId);
+    return { message: `Conta removida com sucesso.` };
   }
 }

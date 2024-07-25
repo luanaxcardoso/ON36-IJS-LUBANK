@@ -28,15 +28,7 @@ export class ContaService {
     return undefined;
   }
 
-  deletarConta(id: number): boolean {
-    const conta = this.contas.find(c => c.id === id);
-    if (conta) {
-      this.contas = this.contas.filter(c => c.id !== id);
-      return true;
-    }
-    return false;
-  }
-  
+    
   removerContasPorCliente(idCliente: number): void {
     this.contas = this.contas.filter(conta => conta.clienteId !== idCliente);
 
