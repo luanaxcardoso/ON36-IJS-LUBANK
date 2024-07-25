@@ -37,7 +37,7 @@ http://localhost:3000
 ###  Semana 02
 - ✅ **POO com Typescript**
 ### Semana 03
-- 🔲 **API**
+- ✅ **API**
 ### Semana 04
 - 🔲 **Design de Código**
 ### Semana 05
