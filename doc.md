@@ -30,5 +30,3 @@ A herança permite reutilizar código e estender funcionalidades de forma simple
 * readonly: Propriedades que só podem ser atribuídas durante a inicialização ou no construtor da classe e não podem ser alteradas depois.
 
 ---
-
-## Semana 03
