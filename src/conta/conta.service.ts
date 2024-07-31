@@ -28,11 +28,8 @@ export class ContaService {
     return undefined;
   }
 
-    
   removerContasPorCliente(idCliente: number): void {
     this.contas = this.contas.filter(conta => conta.clienteId !== idCliente);
 
   }
-
-
 }
