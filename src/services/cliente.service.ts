@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { InterfacePessoa } from '../interfaces/pessoa.interface';
 import { ContaService } from '../services/conta.service';
+import { CreditoComunitario } from 'src/models/contas/creditocomunitario.model';
 
 @Injectable()
 export class ClienteService {
@@ -67,4 +68,5 @@ export class ClienteService {
     }
     return false;
   }
+  
 }

@@ -4,6 +4,7 @@ import { ContaCorrente } from '../models/contas/contacorrente.model';
 import { ContaPoupanca } from '../models/contas/contapoupanca.model';
 import { TipoConta } from 'src/enums/tiposconta.enum';
 import { Conta } from 'src/models/contas/conta.model';
+import { CreditoComunitario } from 'src/models/contas/creditocomunitario.model';
 
 @Controller('conta')
 export class ContaController {
@@ -37,6 +38,16 @@ export class ContaController {
     @Body('rendimentoMensal') rendimentoMensal: number,
   ): ContaPoupanca {
     return this.contaService.criarContaPoupanca(id, saldo, clienteId, rendimentoMensal);
+  }
+
+  @Post('criar/creditocomunitario')
+  criarCreditoComunitario(
+    @Body('id') id: number,
+    @Body('saldo') saldo: number,
+    @Body('clienteId') clienteId: number,
+    @Body('limiteCredito') limiteCredito: number,
+  ): CreditoComunitario {
+    return this.contaService.criarCreditoComunitario(id, saldo, clienteId, limiteCredito);
   }
 
   @Get(':id')
