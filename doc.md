@@ -30,3 +30,27 @@ A herança permite reutilizar código e estender funcionalidades de forma simple
 * readonly: Propriedades que só podem ser atribuídas durante a inicialização ou no construtor da classe e não podem ser alteradas depois.
 
 ---
+
+## Semana 03
+### Criação de um projeto de API RESTful com NestJS
+
+### Implementação de endpoints para CRUD de entidades
+
+- Uso de serviços para encapsular a lógica de negócio
+- Uso de injeção de dependências para facilitar a manutenção e testes
+- Uso de módulos para organizar o código de forma modular
+- Uso de controladores para definir os endpoints da API
+    - Cliente
+    - Conta
+    - Gerente
+---
+## Semana 04
+
+### Refatoração de código
+- Identificar e corrigir problemas de design e implementação
+- Melhorar a legibilidade e manutenibilidade do código
+- Aplicar boas práticas de programação
+- Implementar padrões de design
+  
+- Aplicar SOLID, DRY e KISS
+- Implementar padrões de código PD_Factory, PD_Adapter, PD_Observer
