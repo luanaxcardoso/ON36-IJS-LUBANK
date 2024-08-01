@@ -1,5 +1,5 @@
 import { Conta } from './conta.model';
-import { TipoConta } from 'src/enums/tiposconta.enum';
+import { TipoConta } from '../../enums/tiposconta.enum';
 
 export class CreditoComunitario extends Conta {
   constructor(
@@ -7,7 +7,6 @@ export class CreditoComunitario extends Conta {
     saldo: number,
     clienteId: number,
     public limiteCredito: number
-
   ) {
     super(id, TipoConta.CREDITO_COMUNITARIO, saldo, clienteId);
   }
