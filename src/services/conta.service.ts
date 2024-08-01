@@ -34,8 +34,8 @@ export class ContaService {
     this.contas = this.contas.filter(conta => conta.clienteId !== idCliente);
   }
 
-  criarContaCorrente(id: number, saldo: number, clienteId: number, limite: number): ContaCorrente {
-    const novaConta = new ContaCorrente(id, saldo, clienteId, limite);
+  criarContaCorrente(id: number, saldo: number, clienteId: number): ContaCorrente {
+    const novaConta = new ContaCorrente(id, saldo, clienteId);
     return this.criarConta(novaConta) as ContaCorrente;
   }
 

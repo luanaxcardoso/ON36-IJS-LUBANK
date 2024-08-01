@@ -5,8 +5,7 @@ export class ContaCorrenteFactory {
       id: number,
       saldo: number,
       clienteId: number,
-      creditoComunitario: number
     ): ContaCorrente {
-      return new ContaCorrente(id, saldo, clienteId, creditoComunitario);
+      return new ContaCorrente(id, saldo, clienteId);
     }
 }

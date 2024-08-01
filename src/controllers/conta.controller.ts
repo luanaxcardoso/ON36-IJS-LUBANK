@@ -9,14 +9,24 @@ import { Conta } from 'src/models/contas/conta.model';
 export class ContaController {
   constructor(private readonly contaService: ContaService) {}
 
+  @Post('criar')
+  criarConta(
+    @Body('id') id: number,
+    @Body('tipo') tipo: TipoConta,
+    @Body('saldo') saldo: number,
+    @Body('clienteId') clienteId: number,
+  ): Conta {
+    const novaConta = new Conta(id, tipo, saldo, clienteId);
+    return this.contaService.criarConta(novaConta);
+  }
+
   @Post('criar/contacorrente')
   criarContaCorrente(
     @Body('id') id: number,
     @Body('saldo') saldo: number,
     @Body('clienteId') clienteId: number,
-    @Body('limiteBancoComunitario') limite: number,
   ): ContaCorrente {
-    return this.contaService.criarContaCorrente(id, saldo, clienteId, limite);
+    return this.contaService.criarContaCorrente(id, saldo, clienteId);
   }
 
   @Post('criar/contapoupanca')
@@ -24,9 +34,9 @@ export class ContaController {
     @Body('id') id: number,
     @Body('saldo') saldo: number,
     @Body('clienteId') clienteId: number,
-    @Body('rendimentoMensal') rendimento: number,
+    @Body('rendimentoMensal') rendimentoMensal: number,
   ): ContaPoupanca {
-    return this.contaService.criarContaPoupanca(id, saldo, clienteId, rendimento);
+    return this.contaService.criarContaPoupanca(id, saldo, clienteId, rendimentoMensal);
   }
 
   @Get(':id')
