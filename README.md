@@ -39,7 +39,7 @@ http://localhost:3000
 ### Semana 03
 - ✅ **API**
 ### Semana 04
-- 🔲 **Design de Código**
+- ✅ **Design de Código**
 ### Semana 05
 - 🔲 **Estratégias de Testes**
 ### Semana 06

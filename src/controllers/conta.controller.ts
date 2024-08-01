@@ -1,22 +1,32 @@
 import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/common';
 import { ContaService } from '../services/conta.service';
-import { Conta } from '../models/contas/conta.model';
+import { ContaCorrente } from '../models/contas/contacorrente.model';
+import { ContaPoupanca } from '../models/contas/contapoupanca.model';
 import { TipoConta } from 'src/enums/tiposconta.enum';
-
+import { Conta } from 'src/models/contas/conta.model';
 
 @Controller('conta')
 export class ContaController {
   constructor(private readonly contaService: ContaService) {}
 
-  @Post('criar')
-  criarConta(
+  @Post('criar/contacorrente')
+  criarContaCorrente(
     @Body('id') id: number,
-    @Body('tipo') tipo: TipoConta,
     @Body('saldo') saldo: number,
     @Body('clienteId') clienteId: number,
-  ): Conta {
-    const novaConta = new Conta(id, tipo, saldo, clienteId);
-    return this.contaService.criarConta(novaConta);
+    @Body('limiteBancoComunitario') limite: number,
+  ): ContaCorrente {
+    return this.contaService.criarContaCorrente(id, saldo, clienteId, limite);
+  }
+
+  @Post('criar/contapoupanca')
+  criarContaPoupanca(
+    @Body('id') id: number,
+    @Body('saldo') saldo: number,
+    @Body('clienteId') clienteId: number,
+    @Body('rendimentoMensal') rendimento: number,
+  ): ContaPoupanca {
+    return this.contaService.criarContaPoupanca(id, saldo, clienteId, rendimento);
   }
 
   @Get(':id')
@@ -37,7 +47,6 @@ export class ContaController {
     return this.contaService.atualizarConta(id, tipo);
   }
 
-  
   @Delete('removerporcliente/:clienteId')
   removerContasPorCliente(@Param('clienteId') clienteId: number): { message: string } {
     this.contaService.removerContasPorCliente(clienteId);
