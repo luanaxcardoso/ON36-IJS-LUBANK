@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/common';
-import { ContaService } from './conta.service';
-import { Conta } from './conta.model';
+import { ContaService } from '../services/conta.service';
+import { Conta } from '../models/contas/conta.model';
 import { TipoConta } from 'src/enums/tiposconta.enum';
 
 

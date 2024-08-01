@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Conta } from './conta.model';
+import { Conta } from '../models/contas/conta.model';
 import { TipoConta } from 'src/enums/tiposconta.enum';
 
 @Injectable()

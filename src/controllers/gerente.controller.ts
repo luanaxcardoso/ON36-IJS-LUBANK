@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Param, Delete, Patch, Get } from '@nestjs/common';
-import { GerenteService } from './gerente.service';
-import { Cliente } from '../cliente/cliente.model';
+import { GerenteService } from '../services/gerente.service';
+import { Cliente } from '../models/cliente.model';
 import { TipoConta } from '../enums/tiposconta.enum';
 
 @Controller('gerente')

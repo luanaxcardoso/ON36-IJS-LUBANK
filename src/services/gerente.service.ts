@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Cliente } from '../cliente/cliente.model';
-import { Conta } from '../conta/conta.model';
+import { Cliente } from '../models/cliente.model';
+import { Conta } from '../models/contas/conta.model';
 import { TipoConta } from '../enums/tiposconta.enum';
 import { InterfacePessoa } from 'src/interfaces/pessoa.interface';
-import { ContaService } from 'src/conta/conta.service';
+import { ContaService } from 'src/services/conta.service';
 
 @Injectable()
 export class GerenteService {
@@ -69,6 +69,5 @@ export class GerenteService {
     }
     return { message: `Cliente ${id} não encontrado.`, statusCode: 404 };
   }
-
 
 }

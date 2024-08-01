@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Get, Param, Delete, Patch, NotFoundException } from '@nestjs/common';
-import { ClienteService } from './cliente.service';
-import { Cliente } from './cliente.model';
+import { Controller, Post, Body, Get, Param, Patch, NotFoundException } from '@nestjs/common';
+import { ClienteService } from '../services/cliente.service';
+import { Cliente } from '../models/cliente.model';
 
 
 @Controller('cliente')

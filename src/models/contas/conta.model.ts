@@ -1,4 +1,4 @@
-import { TipoConta } from "src/enums/tiposconta.enum";
+import { TipoConta } from '../../enums/tiposconta.enum';
 
 export class Conta {
   client: number;

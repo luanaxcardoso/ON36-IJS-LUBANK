@@ -1,7 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InterfacePessoa } from '../interfaces/pessoa.interface'; 
-import { ContaService } from '../conta/conta.service';  
-
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InterfacePessoa } from '../interfaces/pessoa.interface';
+import { ContaService } from '../services/conta.service';
 
 @Injectable()
 export class ClienteService {
@@ -65,6 +68,4 @@ export class ClienteService {
     }
     return false;
   }
-
-
 }

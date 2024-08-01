@@ -1,6 +1,6 @@
-import { InterfacePessoa } from 'src/interfaces/pessoa.interface';
-import { Cliente } from '../cliente/cliente.model';
-import { Conta } from '../conta/conta.model';
+import { InterfacePessoa } from '../interfaces/pessoa.interface';
+import { Cliente } from '../models/cliente.model';
+import { Conta } from '../models/contas/conta.model';
 
 export class Gerente implements InterfacePessoa {
   constructor(
@@ -17,4 +17,5 @@ export class Gerente implements InterfacePessoa {
     public clientes?: Cliente[],
     public conta?: Conta[]  
   ) {}
+  
 }
