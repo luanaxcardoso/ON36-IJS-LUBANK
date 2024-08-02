@@ -1,73 +1,46 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Cliente } from '../models/cliente.model';
-import { Conta } from '../models/contas/conta.model';
-import { TipoConta } from '../enums/tiposconta.enum';
-import { InterfacePessoa } from 'src/interfaces/pessoa.interface';
-import { ContaService } from 'src/services/conta.service';
+import { Gerente } from '../models/gerente.model';
 
 @Injectable()
 export class GerenteService {
-  private clientes: InterfacePessoa[] = [];
-  private contas: Conta[] = [];
+  private gerentes: Gerente[] = [];
 
-  constructor(private readonly contaService: ContaService) {}
+  criarGerente(gerente: Gerente): Gerente {
+    console.log('Criando gerente:', gerente);
+    this.gerentes.push(gerente);
+    console.log('Gerentes após criação:', this.gerentes);
+    return gerente;
+  }
 
-  adicionarCliente(cliente: InterfacePessoa): InterfacePessoa {
-    this.clientes.push(cliente);
-    return cliente;
-  }  
-
-  abrirConta(clienteId: number, tipo: TipoConta): Conta | undefined {
-    const clienteExiste = this.clientes.some(c => c.id === clienteId);
-    if (clienteExiste) {
-      const novaConta = new Conta(this.contas.length + 1, tipo, 0, clienteId);
-      this.contas.push(novaConta);
-      return novaConta;
+  buscarGerente(id: number): Gerente {
+    console.log('Buscando gerente com id:', id);
+    const gerente = this.gerentes.find(g => g.id === id);
+    if (!gerente) {
+      throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
     }
-    return undefined;
+    return gerente;
   }
 
-  fecharConta(contaId: number): boolean {
-    const contaIndex = this.contas.findIndex(c => c.id === contaId);
-    if (contaIndex === -1) {
-      return false;
+  buscarGerentes(): Gerente[] {
+    return this.gerentes;
+  }
+
+  atualizarGerente(id: number, gerenteAtualizado: Partial<Gerente>): Gerente | undefined {
+    const gerente = this.gerentes.find(g => g.id === id);
+    if (gerente) {
+      Object.assign(gerente, gerenteAtualizado);
+      return gerente;
     }
-    this.contas.splice(contaIndex, 1);
-    return true;
+    throw new NotFoundException(`Gerente não encontrado.`);
   }
 
-  modificarConta(contaId: number, novoTipo: TipoConta): Conta | undefined {
-    const conta = this.contas.find(c => c.id === contaId);
-    if (conta) {
-      conta.tipo = novoTipo;
-      return conta;
+  deletarGerente(id: number): { message: string } {
+    console.log('Deletando gerente com id:', id);
+    const gerente = this.gerentes.find(g => g.id === id);
+    if (!gerente) {
+      throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
     }
-    return undefined;
+    this.gerentes = this.gerentes.filter(g => g.id !== id);
+    return { message: `Gerente com ID ${id} removido com sucesso.` };
   }
-
-  obterClientes(): Cliente[] {
-    return this.clientes.map(cliente => ({
-      ...cliente,
-      contas: this.contas.filter(conta => conta.clienteId === cliente.id),
-    })) as Cliente[];
-  }
-
-  obterContas(): Conta[] {
-    return this.contas;
-  }
-
-  removerCliente(id: number): { message: string; statusCode: number } {
-    console.log('Clientes:', this.clientes);
-    console.log('ID recebido para remoção:', id);
-  
-    const clienteExistente = this.clientes.some(cliente => cliente.id === id);
-    if (clienteExistente) {
-      this.clientes = this.clientes.filter(cliente => cliente.id !== id);
-      this.contaService.removerContasPorCliente(id);
-      console.log('Clientes após a remoção:', this.clientes);
-      return { message: `Cliente ${id} removido com sucesso.`, statusCode: 200 };
-    }
-    return { message: `Cliente ${id} não encontrado.`, statusCode: 404 };
-  }
-
 }

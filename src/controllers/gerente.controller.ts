@@ -1,51 +1,50 @@
-import { Controller, Post, Body, Param, Delete, Patch, Get } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { GerenteService } from '../services/gerente.service';
-import { Cliente } from '../models/cliente.model';
-import { TipoConta } from '../enums/tiposconta.enum';
+import { Gerente } from '../models/gerente.model';
 
 @Controller('gerente')
 export class GerenteController {
-  
   constructor(private readonly gerenteService: GerenteService) {}
 
-  @Post('addcliente')
-  adicionarCliente(@Body() cliente: Cliente) {
-    return this.gerenteService.adicionarCliente(cliente);
+  @Post('criar')
+  criarGerente(@Body() gerente: Gerente): Gerente {
+    console.log('Recebendo pedido para criar gerente:', gerente);
+    return this.gerenteService.criarGerente(gerente);
   }
 
-  @Delete(':id')
-  removerCliente(@Param('id') id: string) {
-  const idNum = parseInt(id, 10);
-  if (isNaN(idNum)) {
-    return { message: 'ID inválido.', statusCode: 400 };
-  }
-  return this.gerenteService.removerCliente(idNum);
-}
-
-
-  @Post('abrirconta')
-  abrirConta(@Body('clienteId') clienteId: number, @Body('tipo') tipo: TipoConta) {
-    return this.gerenteService.abrirConta(clienteId, tipo);
+  @Get(':id')
+  buscarGerente(
+    @Param('id', ParseIntPipe) id: number
+  ): Gerente | { message: string } {
+    console.log('Recebendo pedido para buscar gerente com id:', id);
+    try {
+      return this.gerenteService.buscarGerente(id);
+    } catch (error) {
+      console.error('Erro ao buscar gerente:', error.message);
+      return { message: error.message };
+    }
   }
 
-  
-  @Patch('modificarconta/:id')
-  modificarConta(@Param('id') id: number, @Body('novoTipo') novoTipo: TipoConta) {
-    return this.gerenteService.modificarConta(id, novoTipo);
+  @Get()
+  buscarGerentes(): Gerente[] {
+    console.log('Recebendo pedido para buscar todos os gerentes');
+    return this.gerenteService.buscarGerentes();
   }
 
-  @Get('clientes')
-  obterClientes() {
-    return this.gerenteService.obterClientes();
+  @Patch('atualizar/:id')
+  atualizarGerente(
+    @Param('id') id: number,
+    @Body() gerenteAtualizado: Partial<Gerente>,
+  ): Gerente | undefined {
+    console.log(`Recebendo pedido para atualizar gerente com id ${id}:`, gerenteAtualizado);
+    return this.gerenteService.atualizarGerente(id, gerenteAtualizado);
   }
 
-  @Get('contas')
-  obterContas() {
-    return this.gerenteService.obterContas();
-  }
-
-@Delete('fecharconta/:id')
-  fecharConta(@Param('id') id: number) {
-    return this.gerenteService.fecharConta(id);
+  @Delete('deletar/:id')
+  deletarGerente(
+    @Param('id', ParseIntPipe) id: number
+  ): { message: string } {
+    console.log('Recebendo pedido para deletar gerente com id:', id);
+    return this.gerenteService.deletarGerente(id);
   }
 }
