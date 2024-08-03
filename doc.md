@@ -47,10 +47,15 @@ A herança permite reutilizar código e estender funcionalidades de forma simple
 ## Semana 04
 
 ### Refatoração de código
+
 - Identificar e corrigir problemas de design e implementação
 - Melhorar a legibilidade e manutenibilidade do código
 - Aplicar boas práticas de programação
 - Implementar padrões de design
+- Melhorar a eficiência e a escalabilidade do código
+- Aplicação dos princípios DRY e KISS
+- Foi adicionada Factory Method para a criação de contas
+- Foi adicionada a classe ContaPoupanca que herda de Conta e implementa a interface Rendimento mensal
+- Foi adicionada a classe ContaCorrente que herda de Conta e implementa a interface Cheque Especial
   
-- Aplicar SOLID, DRY e KISS
-- Implementar padrões de código PD_Factory, PD_Adapter, PD_Observer
+
