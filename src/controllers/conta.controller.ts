@@ -1,10 +1,7 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { ContaService } from '../services/conta.service';
-import { ContaCorrente } from '../models/contas/contacorrente.model';
-import { ContaPoupanca } from '../models/contas/contapoupanca.model';
 import { TipoConta } from 'src/enums/tiposconta.enum';
 import { Conta } from 'src/models/contas/conta.model';
-import { CreditoComunitario } from 'src/models/contas/creditocomunitario.model';
 
 @Controller('conta')
 export class ContaController {
@@ -12,46 +9,18 @@ export class ContaController {
 
   @Post('criar')
   criarConta(
-    @Body('id') id: number,
     @Body('tipo') tipo: TipoConta,
+    @Body('id', ParseIntPipe) id: number,
     @Body('saldo') saldo: number,
-    @Body('clienteId') clienteId: number,
+    @Body('clienteId', ParseIntPipe) clienteId: number,
+    @Body('chequeEspecial') chequeEspecial?: number,
+    @Body('rendimentoMensal') rendimentoMensal?: number,
   ): Conta {
-    const novaConta = new Conta(id, tipo, saldo, clienteId);
-    return this.contaService.criarConta(novaConta);
-  }
-
-  @Post('criar/contacorrente')
-  criarContaCorrente(
-    @Body('id') id: number,
-    @Body('saldo') saldo: number,
-    @Body('clienteId') clienteId: number,
-  ): ContaCorrente {
-    return this.contaService.criarContaCorrente(id, saldo, clienteId);
-  }
-
-  @Post('criar/contapoupanca')
-  criarContaPoupanca(
-    @Body('id') id: number,
-    @Body('saldo') saldo: number,
-    @Body('clienteId') clienteId: number,
-    @Body('rendimentoMensal') rendimentoMensal: number,
-  ): ContaPoupanca {
-    return this.contaService.criarContaPoupanca(id, saldo, clienteId, rendimentoMensal);
-  }
-
-  @Post('criar/creditocomunitario')
-  criarCreditoComunitario(
-    @Body('id') id: number,
-    @Body('saldo') saldo: number,
-    @Body('clienteId') clienteId: number,
-    @Body('limiteCredito') limiteCredito: number,
-  ): CreditoComunitario {
-    return this.contaService.criarCreditoComunitario(id, saldo, clienteId, limiteCredito);
+    return this.contaService.criarConta(tipo, id, saldo, clienteId, chequeEspecial, rendimentoMensal);
   }
 
   @Get(':id')
-  obterConta(@Param('id') id: number): Conta | undefined {
+  obterConta(@Param('id', ParseIntPipe) id: number): Conta | undefined {
     return this.contaService.obterConta(id);
   }
 
@@ -62,15 +31,21 @@ export class ContaController {
 
   @Patch('atualizar/:id')
   atualizarConta(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body('tipo') tipo: TipoConta,
   ): Conta | undefined {
     return this.contaService.atualizarConta(id, tipo);
   }
 
-  @Delete('removerporcliente/:clienteId')
-  removerContasPorCliente(@Param('clienteId') clienteId: number): { message: string } {
-    this.contaService.removerContasPorCliente(clienteId);
+  @Delete('remover/:id')
+  removerConta(@Param('id', ParseIntPipe) id: number): { message: string } {
+    this.contaService.removerConta(id);
     return { message: `Conta removida com sucesso.` };
+  }
+
+  @Delete('removerporcliente/:clienteId')
+  removerContasPorCliente(@Param('clienteId', ParseIntPipe) clienteId: number): { message: string } {
+    this.contaService.removerContasPorCliente(clienteId);
+    return { message: `Contas removidas com sucesso.` };
   }
 }

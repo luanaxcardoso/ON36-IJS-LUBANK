@@ -5,7 +5,8 @@ export class ContaCorrente extends Conta {
   constructor(
     id: number,
     saldo: number,
-    clienteId: number
+    clienteId: number,
+    public chequeEspecial: number,
     
   ) {
     super(id, TipoConta.CONTA_CORRENTE, saldo, clienteId);

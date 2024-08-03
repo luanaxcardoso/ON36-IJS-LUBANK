@@ -1,38 +1,27 @@
-import { Controller, Post, Body, Get, Param, Patch, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, NotFoundException, Delete, ParseIntPipe } from '@nestjs/common';
 import { ClienteService } from '../services/cliente.service';
 import { Cliente } from '../models/cliente.model';
-
 
 @Controller('cliente')
 export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 
   @Post('adicionar')
-  adicionarCliente(
-    @Body() cliente: Cliente
-  ) {
+  adicionarCliente(@Body() cliente: Cliente) {
     return this.clienteService.adicionarCliente(cliente);
   }
 
-  @Post('verificarcredito')
-  verificarCreditoComunitario(@Body('id') id: number) {
-    return this.clienteService.verificarCreditoComunitario(id);
-  }
-
   @Post('associarconta')
-  associarConta(
-    @Body() body: { clienteId: number, contaId: number }
-  ) {
+  associarConta(@Body() body: { clienteId: number, contaId: number }) {
     return this.clienteService.associarConta(body.clienteId, body.contaId);
   }
 
   @Get(':id')
-  async buscarCliente(@Param('id') id: string) {
+  async buscarCliente(@Param('id') id: number) {
     console.log(`Buscar cliente ID: ${id}`);  
-    const idNumber = parseInt(id, 10);
-    const cliente = this.clienteService.buscarCliente(idNumber);
+    const cliente = this.clienteService.buscarCliente(id);
     if (!cliente) {
-      throw new NotFoundException(`Cliente com ID ${idNumber} não encontrado.`);
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
     return cliente;
   }
@@ -42,7 +31,7 @@ export class ClienteController {
     console.log(`Todos os clientes.`);  
     return this.clienteService.buscarClientes();
   }
-  
+
   @Patch('atualizar/:id')
   atualizarCliente(
     @Param('id') id: number,
@@ -50,6 +39,11 @@ export class ClienteController {
   ) {
     return this.clienteService.atualizarCliente(id, atualizarCliente);
   }
-  
+
+  @Delete('deletar/:id')
+  deletarCliente(@Param('id', ParseIntPipe) id: number): { message: string } {
+    console.log('Recebendo pedido para deletar cliente com id:', id);
+    return this.clienteService.deletarCliente(id);
+  }
   
 }

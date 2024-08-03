@@ -1,16 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { Conta } from '../models/contas/conta.model';
-import { ContaCorrente } from '../models/contas/contacorrente.model';
-import { ContaPoupanca } from '../models/contas/contapoupanca.model';
 import { TipoConta } from 'src/enums/tiposconta.enum';
-import { CreditoComunitario } from 'src/models/contas/creditocomunitario.model';
+import { ContaCorrenteFactory } from 'src/factories/contacorrente.factory';
+import { ContaPoupancaFactory } from 'src/factories/contapoupança.factory';
+
 
 @Injectable()
 export class ContaService {
   private contas: Conta[] = [];
 
-  criarConta(conta: Conta): Conta {
+  criarConta(
+    tipo: TipoConta,
+    id: number,
+    saldo: number,
+    clienteId: number,
+    chequeEspecial?: number,
+    rendimentoMensal?: number,
+  ): Conta {
+    let conta: Conta;
+    switch (tipo) {
+      case TipoConta.CONTA_CORRENTE:
+        conta = ContaCorrenteFactory.criarContaCorrente(id, saldo, clienteId, chequeEspecial || 0);
+        break;
+      case TipoConta.CONTA_POUPANCA:
+        conta = ContaPoupancaFactory.criarContaPoupanca(id, saldo, clienteId, rendimentoMensal || 0);
+        break;
+      default:
+        throw new Error(`Tipo de conta não suportado: ${tipo}`);
+    }
     this.contas.push(conta);
+    console.log('Conta criada:', conta);
     return conta;
   }
 
@@ -31,23 +50,11 @@ export class ContaService {
     return undefined;
   }
 
-  criarContaCorrente(id: number, saldo: number, clienteId: number): ContaCorrente {
-    const novaConta = new ContaCorrente(id, saldo, clienteId);
-    return this.criarConta(novaConta) as ContaCorrente;
-  }
-
-  criarContaPoupanca(id: number, saldo: number, clienteId: number, rendimento: number): ContaPoupanca {
-    const novaConta = new ContaPoupanca(id, saldo, clienteId, rendimento);
-    return this.criarConta(novaConta) as ContaPoupanca;
-  }
-
-  criarCreditoComunitario(id: number, saldo: number, clienteId: number, limiteCredito: number): CreditoComunitario {
-    const novaConta = new CreditoComunitario(id, saldo, clienteId, limiteCredito);
-    return this.criarConta(novaConta) as CreditoComunitario;
+  removerConta(id: number): void {
+    this.contas = this.contas.filter(conta => conta.id !== id);
   }
 
   removerContasPorCliente(idCliente: number): void {
     this.contas = this.contas.filter(conta => conta.clienteId !== idCliente);
   }
-  
 }
