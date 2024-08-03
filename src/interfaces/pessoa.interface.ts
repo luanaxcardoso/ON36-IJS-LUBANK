@@ -11,5 +11,6 @@ export interface InterfacePessoa {
   estado: string;
   cpf: string;
   rendaSalarial?: number;
+  statusAtivo?: boolean;
   conta?: Conta[];
 }

@@ -13,6 +13,7 @@ export class Cliente implements InterfacePessoa {
     public estado: string,
     public cpf: string,
     public rendaSalarial: number,
+    public statusAtivo: boolean,
     public conta: Conta[] = []
   ){}
   

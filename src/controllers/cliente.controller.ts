@@ -34,8 +34,8 @@ export class ClienteController {
 
   @Patch('atualizar/:id')
   atualizarCliente(
-    @Param('id') id: number,
-    @Body() atualizarCliente: Cliente
+    @Param('id', ParseIntPipe) id: number,
+    @Body() atualizarCliente: Partial<Cliente>
   ) {
     return this.clienteService.atualizarCliente(id, atualizarCliente);
   }
@@ -43,7 +43,8 @@ export class ClienteController {
   @Delete('deletar/:id')
   deletarCliente(@Param('id', ParseIntPipe) id: number): { message: string } {
     console.log('Recebendo pedido para deletar cliente com id:', id);
-    return this.clienteService.deletarCliente(id);
+    this.clienteService.deletarCliente(id);
+    return { message: `Cliente removido com sucesso.` };
   }
   
 }

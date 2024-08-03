@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Gerente } from '../models/gerente.model';
+import { Cliente } from 'src/models/cliente.model';
 
 @Injectable()
 export class GerenteService {
@@ -8,7 +9,7 @@ export class GerenteService {
   criarGerente(gerente: Gerente): Gerente {
     console.log('Criando gerente:', gerente);
     this.gerentes.push(gerente);
-    console.log('Gerentes após criação:', this.gerentes);
+    console.log('Gerente após criação:', this.gerentes);
     return gerente;
   }
 
@@ -43,4 +44,20 @@ export class GerenteService {
     this.gerentes = this.gerentes.filter(g => g.id !== id);
     return { message: `Gerente com ID ${id} removido com sucesso.` };
   }
+
+  
+  adicionarClienteAoGerente(gerenteId: number, cliente: Cliente): Gerente {
+    const gerente = this.buscarGerente(gerenteId);
+    if (!gerente) {
+      throw new NotFoundException(`Gerente com ID ${gerenteId} não encontrado.`);
+    }
+
+    if (!gerente.clientes) {
+      gerente.clientes = [];
+    }
+
+    gerente.clientes.push(cliente);
+    return gerente;
+}
+
 }

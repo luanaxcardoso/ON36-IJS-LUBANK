@@ -14,8 +14,16 @@ export class Gerente implements InterfacePessoa {
     public estado: string,
     public cpf: string,
     public rendaSalarial?: number,  
-    public clientes?: Cliente[],
-    public conta?: Conta[]  
+    public statusAtivo: boolean = true,  
+    public clientes: Cliente[] = [],    
+    public contas: Conta[] = []         
   ) {}
-  
+
+  adicionarCliente(cliente: Cliente): void {
+    if (!this.clientes) {
+      this.clientes = [];
+    }
+    this.clientes.push(cliente);
+  }
+
 }
