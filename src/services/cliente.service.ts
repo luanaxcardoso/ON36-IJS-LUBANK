@@ -1,6 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InterfacePessoa } from '../interfaces/pessoa.interface'; 
-import { ContaService } from '../conta/conta.service';  
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InterfacePessoa } from '../interfaces/pessoa.interface';
+import { ContaService } from '../services/conta.service';
 
 
 @Injectable()
@@ -14,19 +17,6 @@ export class ClienteService {
     return cliente;
   }
   
-
-  verificarCreditoComunitario(clienteId: number): { message: string } {
-    const cliente = this.clientes.find(c => c.id === clienteId);
-    if (!cliente) {
-      throw new NotFoundException(`Cliente não encontrado.`);
-    }
-    if (cliente.rendaSalarial < 4000) {
-      return { message: 'Cliente é elegível para crédito comunitário.' };
-    } else {
-      return { message: 'Cliente não é elegível para crédito comunitário.' };
-    }
-  }
-
   
   buscarCliente(id: number): InterfacePessoa | undefined {
     const cliente = this.clientes.find(cliente => cliente.id === id);
@@ -66,5 +56,14 @@ export class ClienteService {
     return false;
   }
 
-
+  deletarCliente(id: number): { message: string } {
+    console.log('Deletando cliente com id:', id);
+    const cliente = this.clientes.find(g => g.id === id);
+    if (!cliente) {
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
+    }
+    this.clientes = this.clientes.filter(g => g.id !== id);
+    return { message: `Cliente com ID ${id} removido com sucesso.` };
+  }
 }
+  

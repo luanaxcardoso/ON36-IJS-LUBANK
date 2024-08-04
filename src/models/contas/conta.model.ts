@@ -1,11 +1,10 @@
-import { TipoConta } from "src/enums/tiposconta.enum";
+import { TipoConta } from '../../enums/tiposconta.enum';
 
 export class Conta {
-  client: number;
   constructor(
     public id: number,
     public tipo: TipoConta,
     public saldo: number,
-    public clienteId: number
+    public clienteId: number,
   ) {}
 }
