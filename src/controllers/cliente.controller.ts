@@ -12,7 +12,7 @@ export class ClienteController {
   }
 
   @Post('associarconta')
-  associarConta(@Body() body: { clienteId: number, contaId: number }) {
+  associarConta(@Body() body: { clienteId: number; contaId: number }) {
     return this.clienteService.associarConta(body.clienteId, body.contaId);
   }
 
