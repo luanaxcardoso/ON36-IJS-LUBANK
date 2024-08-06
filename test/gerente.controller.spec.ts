@@ -30,7 +30,7 @@ describe('GerenteController', () => {
         service = module.get<GerenteService>(GerenteService);
     });
 
-    it('chama o método criarGerente', () => {
+    it('Chama o método criarGerente', () => {
         const gerente = {
             id: 1,
             nome: 'Bernadete Alves',
@@ -51,18 +51,18 @@ describe('GerenteController', () => {
     });
     
 
-    it('chama o método buscarGerente', () => {
+    it('Chama o método buscarGerente', () => {
         const id = 1;
         controller.buscarGerente(id);
         expect(service.buscarGerente).toHaveBeenCalledWith(id);
     });
 
-    it('chama o método buscarGerentes', () => {
+    it('Chama o método buscarGerentes', () => {
         controller.buscarGerentes();
         expect(service.buscarGerentes).toHaveBeenCalled();
     });
 
-    it('chama o método atualizarGerente', () => {
+    it('Chama o método atualizarGerente', () => {
         const id = 1;
         const gerenteAtualizado = {
             nome: 'Bernadete Alves',
@@ -83,7 +83,7 @@ describe('GerenteController', () => {
     });
 
     
-    it('chama o método adicionarClienteAoGerente', () => {
+    it('Chama o método adicionarClienteAoGerente', () => {
         const gerenteId = 1;
         const cliente = {
             id: 1,
@@ -103,7 +103,7 @@ describe('GerenteController', () => {
         expect(service.adicionarClienteAoGerente).toHaveBeenCalledWith(gerenteId, cliente);
     });
 
-    it('chama o método deletarGerente', () => {
+    it('Chama o método deletarGerente', () => {
         const id = 1;
         controller.deletarGerente(id);
         expect(service.deletarGerente).toHaveBeenCalledWith(id);
