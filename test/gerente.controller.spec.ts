@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { GerenteController } from "../src/controllers/gerente.controller";
 import { GerenteService } from "../src/services/gerente.service";
+import { NotFoundException } from '@nestjs/common';
 
 describe('GerenteController', () => {
     let controller: GerenteController;
@@ -49,7 +50,6 @@ describe('GerenteController', () => {
         controller.criarGerente(gerente);
         expect(service.criarGerente).toHaveBeenCalledWith(gerente);
     });
-    
 
     it('Chama o método buscarGerente', () => {
         const id = 1;
@@ -82,7 +82,6 @@ describe('GerenteController', () => {
         expect(service.atualizarGerente).toHaveBeenCalledWith(id, gerenteAtualizado);
     });
 
-    
     it('Chama o método adicionarClienteAoGerente', () => {
         const gerenteId = 1;
         const cliente = {
@@ -107,5 +106,14 @@ describe('GerenteController', () => {
         const id = 1;
         controller.deletarGerente(id);
         expect(service.deletarGerente).toHaveBeenCalledWith(id);
+    });
+
+    it('Deve lançar uma exceção ao buscar um gerente inexistente', async () => {
+        const id = 999;
+        (service.buscarGerente as jest.Mock).mockRejectedValue(new NotFoundException(`Gerente com ID ${id} não encontrado.`));
+
+        const result = await controller.buscarGerente(id);
+
+        expect(result).toEqual({ message: `Gerente com ID ${id} não encontrado.` });
     });
 });
