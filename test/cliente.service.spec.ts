@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClienteService } from '../src/services/cliente.service';
 import { ContaService } from '../src/services/conta.service';
 import { InterfacePessoa } from '../src/interfaces/pessoa.interface';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 
 const mockContaService = {
   obterConta: jest.fn(),
@@ -38,6 +39,24 @@ describe('ClienteService', () => {
     const resultado = service.adicionarCliente(cliente);
     expect(resultado).toBe(cliente);
     expect(service.buscarClientes()).toContain(cliente);
+  });
+
+  it('Deve lançar uma exceção ao adicionar um cliente com ID já existente', () => {
+    const cliente: InterfacePessoa = {
+      id: 1,
+      nome: 'Luana Cardoso',
+      conta: [],
+      dataNascimento: '',
+      email: '',
+      telefone: '',
+      endereco: '',
+      cidade: '',
+      estado: '',
+      cpf: ''
+    };
+
+    service.adicionarCliente(cliente);
+    expect(() => service.adicionarCliente(cliente)).toThrow(ConflictException);
   });
 
   it('Deve buscar um cliente pelo ID', () => {
