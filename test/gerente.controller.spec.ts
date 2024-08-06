@@ -109,7 +109,7 @@ describe('GerenteController', () => {
     });
 
     it('Deve lançar uma exceção ao buscar um gerente inexistente', async () => {
-        const id = 999;
+        const id = 111;
         (service.buscarGerente as jest.Mock).mockRejectedValue(new NotFoundException(`Gerente com ID ${id} não encontrado.`));
 
         const result = await controller.buscarGerente(id);
