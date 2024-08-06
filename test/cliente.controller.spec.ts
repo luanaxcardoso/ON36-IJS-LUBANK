@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClienteController } from '../src/controllers/cliente.controller';
 import { ClienteService } from '../src/services/cliente.service';
 import { Cliente } from '../src/models/cliente.model';
+import { NotFoundException } from '@nestjs/common';
 
 describe('ClienteController', () => {
   let controller: ClienteController;
@@ -28,7 +29,6 @@ describe('ClienteController', () => {
     service = module.get<ClienteService>(ClienteService);
   });
 
-
   it('Chama o método adicionarCliente', () => {
     const cliente: Cliente = {
       id: 1,
@@ -47,7 +47,6 @@ describe('ClienteController', () => {
     controller.adicionarCliente(cliente);
     expect(service.adicionarCliente).toHaveBeenCalledWith(cliente);
   });
-
 
   it('Chama o método associarConta', () => {
     const clienteId = 1;
@@ -78,5 +77,12 @@ describe('ClienteController', () => {
     const result = await controller.buscarCliente(id);
     expect(service.buscarCliente).toHaveBeenCalledWith(id);
     expect(result).toEqual(cliente); 
+  });
+
+  it('Deve lançar uma exceção ao buscar um cliente inexistente', async () => {
+    const id = 111;
+    (service.buscarCliente as jest.Mock).mockResolvedValue(undefined); 
+
+    await expect(controller.buscarCliente(id)).rejects.toThrowError(new NotFoundException(`Cliente com ID ${id} não encontrado.`));
   });
 });
