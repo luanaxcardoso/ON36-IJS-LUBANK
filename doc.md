@@ -71,7 +71,8 @@ npm install --save-dev jest @nestjs/testing ts-jest
 
 npx jest --init 
 ````
-Roda os testes com o comando:
+
+- Para rodar os testes       
 
 ```bash
 npm run test:e2e 
@@ -83,6 +84,6 @@ npm test
 ```
 
 - Implementação de testes unitários e de integração
-- Uso de ferramentas como Jest e Supertest
+- Uso de ferramentas como Jest 
 - Uso de mocks para simular comportamentos
 - Uso de TDD para guiar o desenvolvimento
