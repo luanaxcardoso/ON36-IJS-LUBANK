@@ -1,4 +1,12 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
+import { Controller, 
+  Post, 
+  Get, 
+  Patch, 
+  Delete,
+  Param, 
+  Body, 
+  ParseIntPipe, 
+  NotFoundException } from '@nestjs/common';
 import { GerenteService } from '../services/gerente.service';
 import { Gerente } from '../models/gerente.model';
 import { Cliente } from '../models/cliente.model';
@@ -14,12 +22,16 @@ export class GerenteController {
   }
 
   @Get(':id')
-  buscarGerente(
+  async buscarGerente(
     @Param('id', ParseIntPipe) id: number
-  ): Gerente | { message: string } {
+  ): Promise<Gerente | { message: string }> {
     console.log('Recebendo pedido para buscar gerente com id:', id);
     try {
-      return this.gerenteService.buscarGerente(id);
+      const gerente = await this.gerenteService.buscarGerente(id);
+      if (!gerente) {
+        throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
+      }
+      return gerente;
     } catch (error) {
       console.error('Erro ao buscar gerente:', error.message);
       return { message: error.message };
@@ -49,14 +61,18 @@ export class GerenteController {
     return this.gerenteService.deletarGerente(id);
   }
 
-   @Post('associarcliente/:gerenteId')
-  associarClienteAoGerente(
+  @Post('associarcliente/:gerenteId')
+  async associarClienteAoGerente(
     @Param('gerenteId', ParseIntPipe) gerenteId: number,
     @Body() cliente: Cliente
-  ): Gerente | { message: string } {
+  ): Promise<Gerente | { message: string }> {
     console.log('Associar cliente ao gerente:', gerenteId, cliente);
     try {
-      return this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
+      const gerenteAtualizado = await this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
+      if (!gerenteAtualizado) {
+        throw new NotFoundException(`Gerente com ID ${gerenteId} não encontrado.`);
+      }
+      return gerenteAtualizado;
     } catch (error) {
       console.error('Erro ao associar cliente ao gerente:', error.message);
       return { message: error.message };
