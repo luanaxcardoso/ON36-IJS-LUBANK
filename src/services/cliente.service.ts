@@ -1,10 +1,10 @@
 import {
   Injectable,
+  ConflictException,
   NotFoundException,
 } from '@nestjs/common';
 import { InterfacePessoa } from '../interfaces/pessoa.interface';
 import { ContaService } from '../services/conta.service';
-
 
 @Injectable()
 export class ClienteService {
@@ -12,11 +12,14 @@ export class ClienteService {
 
   constructor(private readonly contaService: ContaService) {}
 
-  adicionarCliente(cliente: InterfacePessoa): InterfacePessoa { 
+  adicionarCliente(cliente: InterfacePessoa): InterfacePessoa {
+    const clienteExistente = this.clientes.find(c => c.id === cliente.id);
+    if (clienteExistente) {
+      throw new ConflictException(`Cliente com ID ${cliente.id} já existe.`);
+    }
     this.clientes.push(cliente);
     return cliente;
   }
-  
   
   buscarCliente(id: number): InterfacePessoa | undefined {
     const cliente = this.clientes.find(cliente => cliente.id === id);
@@ -32,7 +35,6 @@ export class ClienteService {
     return this.clientes;
   }
 
-
   atualizarCliente(id: number, clienteAtualizado: Partial<InterfacePessoa>): InterfacePessoa | undefined {
     const cliente = this.clientes.find(c => c.id === id);
     if (cliente) {
@@ -41,7 +43,6 @@ export class ClienteService {
     }
     return undefined;
   }
-  
 
   associarConta(clienteId: number, contaId: number): boolean {
     const cliente = this.clientes.find(c => c.id === clienteId);
@@ -66,4 +67,3 @@ export class ClienteService {
     return { message: `Cliente com ID ${id} removido com sucesso.` };
   }
 }
-  
