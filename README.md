@@ -41,7 +41,7 @@ http://localhost:3000
 ### Semana 04
 - ✅ **Design de Código**
 ### Semana 05
-- 🔲 **Estratégias de Testes**
+- ✅ **Estratégias de Testes**
 ### Semana 06
 - 🔲 **Arquitetura**
 ### Semana 07
