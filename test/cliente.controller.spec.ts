@@ -30,20 +30,20 @@ describe('ClienteController', () => {
   });
 
   it('Chama o método adicionarCliente', () => {
-    const cliente: Cliente = {
-      id: 1,
-      nome: 'Luana Cardoso',
-      dataNascimento: '1986-08-12',
-      email: 'luana.cardoso@gmail.com',
-      telefone: '+55 11 99856-1234',
-      endereco: 'Rua Machado de Assis, 123, Apto 45',
-      cidade: 'São Paulo',
-      estado: 'SP',
-      cpf: '365.968.456-00',
-      rendaSalarial: 3000,
-      statusAtivo: true,
-      conta: [] 
-    };
+    const cliente = new Cliente(
+      1,
+      'Luana Cardoso',
+      '1986-08-12',
+      'luana.cardoso@gmail.com',
+      '+55 11 99856-1234',
+      'Rua Machado de Assis, 123, Apto 45',
+      'São Paulo',
+      'SP',
+      '365.968.456-00',
+      3000,
+      true
+    );
+
     controller.adicionarCliente(cliente);
     expect(service.adicionarCliente).toHaveBeenCalledWith(cliente);
   });
@@ -58,30 +58,30 @@ describe('ClienteController', () => {
 
   it('Chama o método buscarCliente', async () => {
     const id = 1;
-    const cliente: Cliente = {
-      id: 1,
-      nome: 'Luana Cardoso',
-      dataNascimento: '1986-08-12',
-      email: 'luana.cardoso@gmail.com',
-      telefone: '+55 11 99856-1234',
-      endereco: 'Rua Machado de Assis, 123, Apto 45',
-      cidade: 'São Paulo',
-      estado: 'SP',
-      cpf: '365.968.456-00',
-      rendaSalarial: 3000,
-      statusAtivo: true,
-      conta: []
-    };
-    (service.buscarCliente as jest.Mock).mockResolvedValue(cliente); 
+    const cliente = new Cliente(
+      1,
+      'Luana Cardoso',
+      '1986-08-12',
+      'luana.cardoso@gmail.com',
+      '+55 11 99856-1234',
+      'Rua Machado de Assis, 123, Apto 45',
+      'São Paulo',
+      'SP',
+      '365.968.456-00',
+      3000,
+      true
+    );
+
+    (service.buscarCliente as jest.Mock).mockResolvedValue(cliente);
 
     const result = await controller.buscarCliente(id);
     expect(service.buscarCliente).toHaveBeenCalledWith(id);
-    expect(result).toEqual(cliente); 
+    expect(result).toEqual(cliente);
   });
 
   it('Deve lançar uma exceção ao buscar um cliente inexistente', async () => {
     const id = 111;
-    (service.buscarCliente as jest.Mock).mockResolvedValue(undefined); 
+    (service.buscarCliente as jest.Mock).mockResolvedValue(null);
 
     await expect(controller.buscarCliente(id)).rejects.toThrowError(new NotFoundException(`Cliente com ID ${id} não encontrado.`));
   });
