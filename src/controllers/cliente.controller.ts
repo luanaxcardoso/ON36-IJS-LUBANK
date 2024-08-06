@@ -19,7 +19,7 @@ export class ClienteController {
   @Get(':id')
   async buscarCliente(@Param('id') id: number) {
     console.log(`Buscar cliente ID: ${id}`);  
-    const cliente = this.clienteService.buscarCliente(id);
+    const cliente = await this.clienteService.buscarCliente(id);
     if (!cliente) {
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
@@ -46,5 +46,4 @@ export class ClienteController {
     this.clienteService.deletarCliente(id);
     return { message: `Cliente removido com sucesso.` };
   }
-  
 }
