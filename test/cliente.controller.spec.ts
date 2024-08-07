@@ -36,7 +36,7 @@ describe('ClienteController (e2e)', () => {
       .expect('Content-Type', /json/);
 
     expect(response.body).toHaveProperty('id');
-    clienteId = response.body.id; // Armazenando o ID do cliente criado
+    clienteId = response.body.id;
     expect(response.body.nome).toBe('Luana Cardoso');
   });
 
