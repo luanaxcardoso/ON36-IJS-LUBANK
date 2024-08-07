@@ -51,6 +51,22 @@ describe('GerenteController (e2e)', () => {
     expect(response.body.nome).toBe('Bernadete Alves');
   });
 
+  it('/gerente/:id (PATCH)', async () => {
+    await supertest(app.getHttpServer())
+      .patch(`/gerente/atualizar/${gerenteId}`)
+      .send({ nome: 'Bernadete Serafim Alves' })
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const updatedResponse = await supertest(app.getHttpServer())
+      .get(`/gerente/${gerenteId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(updatedResponse.body).toHaveProperty('id', gerenteId);
+    expect(updatedResponse.body.nome).toBe('Bernadete Serafim Alves');
+  });
+
   afterAll(async () => {
     await app.close();
   });

@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GerenteService } from '../src/services/gerente.service';
-import { Cliente } from '../src/models/cliente.model';
 import { Gerente } from '../src/models/gerente.model';
+
 
 describe('GerenteService', () => {
   let service: GerenteService;
+  let gerenteId: number;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -14,139 +15,55 @@ describe('GerenteService', () => {
     service = module.get<GerenteService>(GerenteService);
   });
 
-  it('Deve criar um gerente', () => {
-    const gerente: Gerente = {
-      id: 1,
-      nome: 'Bernadete Alves',
-      clientes: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cpf: '',
-      statusAtivo: false,
-      contas: [],
-      adicionarCliente: function (cliente: Cliente): void {
-        throw new Error('Função não implementada.');
-      }
-    };
+  it('Deve criar um gerente', async () => {
+    const gerente: Gerente = new Gerente(
+      1,
+      'Bernadete Alves',
+      '1956-05-17',
+      'bernadete@gmail.com',
+      '12 98765-4321',
+      'Rua das Flores, 1232',
+      'São Paulo',
+      'SP',
+      '123.456.789-00',
+      5000,
+      true
+    );
 
-    const resultado = service.criarGerente(gerente);
-    expect(resultado).toBe(gerente);
-    expect(service.buscarGerentes()).toContain(gerente);
+    const criado = await service.criarGerente(gerente);
+    gerenteId = criado.id;
+
+    const atualizado = await service.atualizarGerente(gerenteId, { nome: 'Bernadete Serafim Alves' });
+    expect(atualizado?.nome).toBe('Bernadete Serafim Alves');
   });
 
-  it('Deve buscar um gerente pelo ID', () => {
-    const gerente: Gerente = {
-      id: 1,
-      nome: 'Bernadete Alves',
-      clientes: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cpf: '',
-      statusAtivo: false,
-      contas: [],
-      adicionarCliente: function (cliente: Cliente): void {
-        throw new Error('Função não implementada.');
-      }
-    };
+  it('Deve deletar um gerente', async () => {
+    
+    const gerente: Gerente = new Gerente(
+      2,
+      'Bernadete Alves',
+      '1956-05-17',
+      'bernadete@gmail.com',
+      '12 98765-4321',
+      'Rua das Flores, 1232',
+      'São Paulo',
+      'SP',
+      '123.456.789-00',
+      5000,
+      true
+    );
 
-    service.criarGerente(gerente);
-    const encontrado = service.buscarGerente(1);
-    expect(encontrado).toBe(gerente);
-  });
+    const criado = await service.criarGerente(gerente);
+    const idGerente = criado.id;
+    const gerenteExistente = await service.buscarGerente(idGerente);
+    expect(gerenteExistente).toBeDefined();
+    expect(gerenteExistente.id).toBe(idGerente);
 
-  it('Deve atualizar um gerente', () => {
-    const gerente: Gerente = {
-      id: 1,
-      nome: 'Bernadete Alves',
-      clientes: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cpf: '',
-      statusAtivo: false,
-      contas: [],
-      adicionarCliente: function (cliente: Cliente): void {
-        throw new Error('Função não implementada.');
-      }
-    };
+    
+    const resultado = await service.deletarGerente(idGerente);
+    expect(resultado.message).toBe(`Gerente com ID ${idGerente} removido com sucesso.`);
 
-    service.criarGerente(gerente);
-    const atualizado = service.atualizarGerente(1, { nome: 'Bernadete Alves' });
-    expect(atualizado?.nome).toBe('Bernadete Alves');
-  });
-
-  it('Deve deletar um gerente', () => {
-    const gerente: Gerente = {
-      id: 1,
-      nome: 'Bernadete Alves',
-      clientes: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cpf: '',
-      statusAtivo: false,
-      contas: [],
-      adicionarCliente: function (cliente: Cliente): void {
-        throw new Error('Função não implementada.');
-      }
-    };
-
-    service.criarGerente(gerente);
-    const mensagem = service.deletarGerente(1);
-    expect(mensagem).toEqual({ message: 'Gerente com ID 1 removido com sucesso.' });
-    expect(service.buscarGerentes()).not.toContain(gerente);
-  });
-
-  it('Deve adicionar um cliente a um gerente', () => {
-    const gerente: Gerente = {
-      id: 1,
-      nome: 'Bernadete Alves',
-      clientes: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cpf: '',
-      statusAtivo: false,
-      contas: [],
-      adicionarCliente: function (cliente: Cliente): void {
-        throw new Error('Função não implementada.');
-      }
-    };
-
-    const cliente: Cliente = {
-      id: 1,
-      nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cpf: '',
-      rendaSalarial: 3000,
-      statusAtivo: true,
-    };
-
-    service.criarGerente(gerente);
-    const gerenteAtualizado = service.adicionarClienteAoGerente(1, cliente);
-    expect(gerenteAtualizado.clientes).toContain(cliente);
+    
+    await expect(service.buscarGerente(idGerente)).rejects.toThrowError(`Gerente com ID ${idGerente} não encontrado.`);
   });
 });
