@@ -22,7 +22,7 @@ describe('ClienteController (e2e)', () => {
         nome: 'Luana Cardoso',
         dataNascimento: '1986-08-12',
         email: 'luana@gmail.com',
-        telefone: '11 99856-1234',
+        telefone: '12 99856-1234',
         endereco: 'Rua Machado de Assis, 123, Apto 45',
         cidade: 'São Paulo',
         estado: 'SP',
@@ -40,15 +40,15 @@ describe('ClienteController (e2e)', () => {
     return response.body.id;
   });
 
+
   it('/cliente/:id (GET)', async () => {
-    
     const addResponse = await supertest(app.getHttpServer())
       .post('/cliente/adicionar')
       .send({
         nome: 'Luana Cardoso',
         dataNascimento: '1986-08-12',
         email: 'luana@gmail.com',
-        telefone: '11 99856-1234',
+        telefone: '12 99856-1234',
         endereco: 'Rua Machado de Assis, 123, Apto 45',
         cidade: 'São Paulo',
         estado: 'SP',
@@ -59,22 +59,93 @@ describe('ClienteController (e2e)', () => {
       })
       .expect(201)
       .expect('Content-Type', /json/);
-  
+
     const clienteId = addResponse.body.id;
-  
+
     const response = await supertest(app.getHttpServer())
       .get(`/cliente/${clienteId}`)
       .expect(200)
       .expect('Content-Type', /json/);
-  
+
     console.log('Resposta do GET:', response.body);
-  
+
     expect(response.body).toHaveProperty('id', clienteId);
     expect(response.body.nome).toBe('Luana Cardoso');
   });
-  
+
+
+  it('/cliente/:id (PATCH)', async () => {
+    const addResponse = await supertest(app.getHttpServer())
+      .post('/cliente/adicionar')
+      .send({
+        nome: 'Luana Cardoso',
+        dataNascimento: '1986-08-12',
+        email: 'luana@gmail.com',
+        telefone: '12 99856-1234',
+        endereco: 'Rua Machado de Assis, 123, Apto 45',
+        cidade: 'São Paulo',
+        estado: 'SP',
+        cpf: '365.968.456-00',
+        rendaSalarial: 3000,
+        statusAtivo: true,
+        conta: []
+      })
+      .expect(201)
+      .expect('Content-Type', /json/);
+
+    const clienteId = addResponse.body.id;
+
+    await supertest(app.getHttpServer())
+      .patch(`/cliente/atualizar/${clienteId}`)
+      .send({ nome: 'Luana Silva' })
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const updatedResponse = await supertest(app.getHttpServer())
+      .get(`/cliente/${clienteId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(updatedResponse.body).toHaveProperty('id', clienteId);
+    expect(updatedResponse.body.nome).toBe('Luana Silva');
+  });
+
+
+  it('/cliente/:id (DELETE)', async () => {
+    const addResponse = await supertest(app.getHttpServer())
+      .post('/cliente/adicionar')
+      .send({
+        nome: 'Luana Cardoso',
+        dataNascimento: '1986-08-12',
+        email: 'luana@gmail.com',
+        telefone: '12 99856-1234',
+        endereco: 'Rua Machado de Assis, 123, Apto 45',
+        cidade: 'São Paulo',
+        estado: 'SP',
+        cpf: '365.968.456-00',
+        rendaSalarial: 3000,
+        statusAtivo: true,
+        conta: []
+      })
+      .expect(201)
+      .expect('Content-Type', /json/);
+
+    const clienteId = addResponse.body.id;
+
+    await supertest(app.getHttpServer())
+      .delete(`/cliente/deletar/${clienteId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    await supertest(app.getHttpServer())
+      .get(`/cliente/${clienteId}`)
+      .expect(404);
+  });
 
   afterAll(async () => {
     await app.close();
   });
+
+  
+  
 });
