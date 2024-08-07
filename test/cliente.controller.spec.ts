@@ -5,6 +5,7 @@ import { AppModule } from '../src/app.module';
 
 describe('ClienteController (e2e)', () => {
   let app: INestApplication;
+  let clienteId: number; 
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -31,37 +32,15 @@ describe('ClienteController (e2e)', () => {
         statusAtivo: true,
         conta: []
       })
-      .expect(201) 
-      .expect('Content-Type', /json/);
-
-    expect(response.body).toHaveProperty('id');
-    expect(response.body.nome).toBe('Luana Cardoso');
-    
-    return response.body.id;
-  });
-
-
-  it('/cliente/:id (GET)', async () => {
-    const addResponse = await supertest(app.getHttpServer())
-      .post('/cliente/adicionar')
-      .send({
-        nome: 'Luana Cardoso',
-        dataNascimento: '1986-08-12',
-        email: 'luana@gmail.com',
-        telefone: '12 99856-1234',
-        endereco: 'Rua Machado de Assis, 123, Apto 45',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cpf: '365.968.456-00',
-        rendaSalarial: 3000,
-        statusAtivo: true,
-        conta: []
-      })
       .expect(201)
       .expect('Content-Type', /json/);
 
-    const clienteId = addResponse.body.id;
+    expect(response.body).toHaveProperty('id');
+    clienteId = response.body.id; // Armazenando o ID do cliente criado
+    expect(response.body.nome).toBe('Luana Cardoso');
+  });
 
+  it('/cliente/:id (GET)', async () => {
     const response = await supertest(app.getHttpServer())
       .get(`/cliente/${clienteId}`)
       .expect(200)
@@ -73,31 +52,10 @@ describe('ClienteController (e2e)', () => {
     expect(response.body.nome).toBe('Luana Cardoso');
   });
 
-
   it('/cliente/:id (PATCH)', async () => {
-    const addResponse = await supertest(app.getHttpServer())
-      .post('/cliente/adicionar')
-      .send({
-        nome: 'Luana Cardoso',
-        dataNascimento: '1986-08-12',
-        email: 'luana@gmail.com',
-        telefone: '12 99856-1234',
-        endereco: 'Rua Machado de Assis, 123, Apto 45',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cpf: '365.968.456-00',
-        rendaSalarial: 3000,
-        statusAtivo: true,
-        conta: []
-      })
-      .expect(201)
-      .expect('Content-Type', /json/);
-
-    const clienteId = addResponse.body.id;
-
     await supertest(app.getHttpServer())
       .patch(`/cliente/atualizar/${clienteId}`)
-      .send({ nome: 'Luana Silva' })
+      .send({ nome: 'Luana Aparecida Cardoso' })
       .expect(200)
       .expect('Content-Type', /json/);
 
@@ -107,35 +65,15 @@ describe('ClienteController (e2e)', () => {
       .expect('Content-Type', /json/);
 
     expect(updatedResponse.body).toHaveProperty('id', clienteId);
-    expect(updatedResponse.body.nome).toBe('Luana Silva');
+    expect(updatedResponse.body.nome).toBe('Luana Aparecida Cardoso');
   });
 
-
-  it('/cliente/:id (DELETE)', async () => {
-    const addResponse = await supertest(app.getHttpServer())
-      .post('/cliente/adicionar')
-      .send({
-        nome: 'Luana Cardoso',
-        dataNascimento: '1986-08-12',
-        email: 'luana@gmail.com',
-        telefone: '12 99856-1234',
-        endereco: 'Rua Machado de Assis, 123, Apto 45',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cpf: '365.968.456-00',
-        rendaSalarial: 3000,
-        statusAtivo: true,
-        conta: []
-      })
-      .expect(201)
-      .expect('Content-Type', /json/);
-
-    const clienteId = addResponse.body.id;
-
+  it('/cliente/deletar/:id (DELETE)', async () => {
     await supertest(app.getHttpServer())
       .delete(`/cliente/deletar/${clienteId}`)
       .expect(200)
-      .expect('Content-Type', /json/);
+      .expect('Content-Type', /json/)
+      .expect({ message: `Cliente com ID ${clienteId} removido com sucesso.` });
 
     await supertest(app.getHttpServer())
       .get(`/cliente/${clienteId}`)
@@ -145,7 +83,4 @@ describe('ClienteController (e2e)', () => {
   afterAll(async () => {
     await app.close();
   });
-
-  
-  
 });
