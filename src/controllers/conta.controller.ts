@@ -1,4 +1,3 @@
-// controllers/conta.controller.ts
 import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { ContaService } from '../services/conta.service';
 import { TipoConta } from '../enums/tiposconta.enum';
