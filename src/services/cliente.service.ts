@@ -66,9 +66,11 @@ export class ClienteService {
     console.log('Deletando cliente com id:', id);
     const cliente = this.clientes.find(g => g.id === id);
     if (!cliente) {
+      console.log('Cliente não encontrado.');
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
     this.clientes = this.clientes.filter(g => g.id !== id);
+    console.log('Cliente deletado com sucesso.');
     return { message: `Cliente com ID ${id} removido com sucesso.` };
   }
 }
