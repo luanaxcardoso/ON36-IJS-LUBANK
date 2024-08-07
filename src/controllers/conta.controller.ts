@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
+// controllers/conta.controller.ts
+import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { ContaService } from '../services/conta.service';
 import { TipoConta } from '../enums/tiposconta.enum';
 import { Conta } from '../models/contas/conta.model';
@@ -21,7 +22,11 @@ export class ContaController {
 
   @Get(':id')
   obterConta(@Param('id', ParseIntPipe) id: number): Conta | undefined {
-    return this.contaService.obterConta(id);
+    const conta = this.contaService.obterConta(id);
+    if (!conta) {
+      throw new NotFoundException(`Conta com ID ${id} não encontrada.`);
+    }
+    return conta;
   }
 
   @Get()

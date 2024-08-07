@@ -1,108 +1,104 @@
+import * as supertest from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ContaController } from '../src/controllers/conta.controller';
-import { ContaService } from '../src/services/conta.service';
+import { INestApplication } from '@nestjs/common';
+import { AppModule } from '../src/app.module';
 import { TipoConta } from '../src/enums/tiposconta.enum';
-import { Conta } from '../src/models/contas/conta.model';
 
-describe('ContaController', () => {
-  let controller: ContaController;
-  let service: ContaService;
+describe('ContaController (e2e)', () => {
+  let app: INestApplication;
+  let contaId: number;
+  let clienteId: number;
 
-  beforeEach(async () => {
-    const mockContaService = {
-      criarConta: jest.fn(),
-      obterConta: jest.fn(),
-      obterContas: jest.fn(),
-      atualizarConta: jest.fn(),
-      removerConta: jest.fn(),
-      removerContasPorCliente: jest.fn(),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [ContaController],
-      providers: [
-        {
-          provide: ContaService,
-          useValue: mockContaService,
-        },
-      ],
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
     }).compile();
 
-    controller = module.get<ContaController>(ContaController);
-    service = module.get<ContaService>(ContaService);
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    
+    const clienteResponse = await supertest(app.getHttpServer())
+      .post('/cliente/adicionar')
+      .send({
+        nome: 'Luana Cardoso',
+        dataNascimento: '1986-08-12',
+        email: 'luana@gmail.com',
+        telefone: '12 99856-1234',
+        endereco: 'Rua Machado de Assis, 123, Apto 45',
+        cidade: 'São Paulo',
+        estado: 'SP',
+        cpf: '365.968.456-00',
+        rendaSalarial: 3000,
+        statusAtivo: true,
+        conta: []
+      })
+      .expect(201)
+      .expect('Content-Type', /json/);
+
+    clienteId = clienteResponse.body.id;
   });
 
-  it('Deve chamar o método criarConta', () => {
-    const conta: Conta = {
-      id: 1,
-      tipo: TipoConta.CONTA_CORRENTE,
-      saldo: 1000,
-      clienteId: 1,
-    };
-    const chequeEspecial = 500;
-    const rendimentoMensal = undefined;
+  it('/conta/criar (POST)', async () => {
+    const response = await supertest(app.getHttpServer())
+      .post('/conta/criar')
+      .send({
+        tipo: TipoConta.CONTA_CORRENTE,
+        id: 1,
+        saldo: 1000,
+        clienteId: clienteId,
+        chequeEspecial: 500
+      })
+      .expect(201)
+      .expect('Content-Type', /json/);
 
-    controller.criarConta(
-      conta.tipo,
-      conta.id,
-      conta.saldo,
-      conta.clienteId,
-      chequeEspecial,
-      rendimentoMensal
-    );
-
-    expect(service.criarConta).toHaveBeenCalledWith(
-      conta.tipo,
-      conta.id,
-      conta.saldo,
-      conta.clienteId,
-      chequeEspecial,
-      rendimentoMensal
-    );
+    expect(response.body).toHaveProperty('id');
+    contaId = response.body.id;
+    expect(response.body.saldo).toBe(1000);
   });
 
-  it('Deve chamar o método obterConta', () => {
-    const id = 1;
-    controller.obterConta(id);
-    expect(service.obterConta).toHaveBeenCalledWith(id);
+  it('/conta/:id (GET)', async () => {
+    const response = await supertest(app.getHttpServer())
+      .get(`/conta/${contaId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    console.log('Resposta do GET:', response.body);
+
+    expect(response.body).toHaveProperty('id', contaId);
+    expect(response.body.saldo).toBe(1000);
+  });
+  
+  it('/conta/atualizar/:id (PATCH)', async () => {
+    await supertest(app.getHttpServer())
+      .patch(`/conta/atualizar/${contaId}`)
+      .send({ tipo: TipoConta.CONTA_POUPANCA })
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const updatedResponse = await supertest(app.getHttpServer())
+      .get(`/conta/${contaId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(updatedResponse.body).toHaveProperty('id', contaId);
+    expect(updatedResponse.body.tipo).toBe(TipoConta.CONTA_POUPANCA);
   });
 
-  it('Deve chamar o método obterContas', () => {
-    controller.obterContas();
-    expect(service.obterContas).toHaveBeenCalled();
+  it('/conta/remover/:id (DELETE)', async () => {
+    await supertest(app.getHttpServer())
+      .delete(`/conta/remover/${contaId}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect({ message: `Conta removida com sucesso.` });
+
+      await supertest(app.getHttpServer())
+      .get(`/conta/${contaId}`)
+      .expect(404);
   });
-
-  it('Deve chamar o método atualizarConta', () => {
-    const id = 1;
-    const tipo = TipoConta.CONTA_CORRENTE;
-    controller.atualizarConta(id, tipo);
-    expect(service.atualizarConta).toHaveBeenCalledWith(id, tipo);
-  });
-
-  it('Deve chamar o método removerConta', () => {
-    const id = 1;
-    controller.removerConta(id);
-    expect(service.removerConta).toHaveBeenCalledWith(id);
-  });
-
-  it('Deve chamar o método removerContasPorCliente', () => {
-    const clienteId = 1;
-    controller.removerContasPorCliente(clienteId);
-    expect(service.removerContasPorCliente).toHaveBeenCalledWith(clienteId);
-  });
-
-  it('Deve lidar com exceções para obter uma conta', () => {
-    const id = 1;
-    const errorMessage = 'Conta não encontrada';
-    (service.obterConta as jest.Mock).mockImplementation(() => {
-      throw new Error(errorMessage);
-    });
-
-    try {
-      controller.obterConta(id);
-    } catch (error) {
-      expect(error.message).toBe(errorMessage);
-    }
+  
+  afterAll(async () => {
+    await app.close();
   });
 
 });
