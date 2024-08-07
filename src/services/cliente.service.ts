@@ -22,9 +22,6 @@ export class ClienteService {
     this.clientes.push(cliente);
     return cliente;
   }
-  
-  
-  
 
   buscarCliente(id: number): InterfacePessoa | undefined {
     const cliente = this.clientes.find(cliente => cliente.id === id);
