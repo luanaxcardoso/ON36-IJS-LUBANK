@@ -45,7 +45,6 @@ export class ClienteController {
   @Delete('deletar/:id')
   deletarCliente(@Param('id', ParseIntPipe) id: number): { message: string } {
     console.log('Recebendo pedido para deletar cliente com id:', id);
-    this.clienteService.deletarCliente(id);
-    return { message: `Cliente removido com sucesso.` };
+    return this.clienteService.deletarCliente(id);
   }
 }
