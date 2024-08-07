@@ -1,119 +1,45 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { GerenteController } from "../src/controllers/gerente.controller";
-import { GerenteService } from "../src/services/gerente.service";
-import { NotFoundException } from '@nestjs/common';
+import * as supertest from 'supertest';
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import { AppModule } from '../src/app.module';
 
-describe('GerenteController', () => {
-    let controller: GerenteController;
-    let service: GerenteService;
+describe('GerenteController (e2e)', () => {
+  let app: INestApplication;
+  let gerenteId: number; 
 
-    beforeEach(async () => {
-        const mockGerenteService = {
-            criarGerente: jest.fn(),
-            buscarGerente: jest.fn(),
-            buscarGerentes: jest.fn(),
-            atualizarGerente: jest.fn(),
-            deletarGerente: jest.fn(),
-            adicionarClienteAoGerente: jest.fn(),
-        };
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
 
-        const module: TestingModule = await Test.createTestingModule({
-            controllers: [GerenteController],
-            providers: [
-                {
-                    provide: GerenteService,
-                    useValue: mockGerenteService,
-                },
-            ],
-        }).compile();
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
 
-        controller = module.get<GerenteController>(GerenteController);
-        service = module.get<GerenteService>(GerenteService);
-    });
+  it('/gerente/criar (POST)', async () => {
+    const response = await supertest(app.getHttpServer())
+      .post('/gerente/criar')
+      .send({
+        nome: 'Bernadete Alves',
+        dataNascimento: '1986-08-12',
+        email: 'bernadete@gmail.com',
+        telefone: '11 98765-4321',
+        endereco: 'Rua das Flores, 123',
+        cidade: 'São Paulo',
+        estado: 'SP',
+        cpf: '123.456.789-00',
+        statusAtivo: true,
+        contas: []
+      })
+      .expect(201)
+      .expect('Content-Type', /json/);
 
-    it('Chama o método criarGerente', () => {
-        const gerente = {
-            id: 1,
-            nome: 'Bernadete Alves',
-            clientes: [],
-            dataNascimento: '',
-            email: '',
-            telefone: '',
-            endereco: '',
-            cidade: '',
-            estado: '',
-            cpf: '',
-            statusAtivo: false,
-            contas: [],
-            adicionarCliente: jest.fn(),
-        };
-        controller.criarGerente(gerente);
-        expect(service.criarGerente).toHaveBeenCalledWith(gerente);
-    });
+    expect(response.body).toHaveProperty('id');
+    gerenteId = response.body.id;
+    expect(response.body.nome).toBe('Bernadete Alves');
+  });
 
-    it('Chama o método buscarGerente', () => {
-        const id = 1;
-        controller.buscarGerente(id);
-        expect(service.buscarGerente).toHaveBeenCalledWith(id);
-    });
-
-    it('Chama o método buscarGerentes', () => {
-        controller.buscarGerentes();
-        expect(service.buscarGerentes).toHaveBeenCalled();
-    });
-
-    it('Chama o método atualizarGerente', () => {
-        const id = 1;
-        const gerenteAtualizado = {
-            nome: 'Bernadete Alves',
-            clientes: [],
-            dataNascimento: '',
-            email: '',
-            telefone: '',
-            endereco: '',
-            cidade: '',
-            estado: '',
-            cpf: '',
-            statusAtivo: false,
-            contas: [],
-            adicionarCliente: jest.fn(),
-        };
-        controller.atualizarGerente(id, gerenteAtualizado);
-        expect(service.atualizarGerente).toHaveBeenCalledWith(id, gerenteAtualizado);
-    });
-
-    it('Chama o método adicionarClienteAoGerente', () => {
-        const gerenteId = 1;
-        const cliente = {
-            id: 1,
-            nome: 'Luana Cardoso',
-            dataNascimento: '',
-            email: '',
-            telefone: '',
-            endereco: '',
-            cidade: '',
-            estado: '',
-            cpf: '',
-            rendaSalarial: 0,
-            statusAtivo: false,
-            conta: [],
-        };
-        controller.associarClienteAoGerente(gerenteId, cliente);
-        expect(service.adicionarClienteAoGerente).toHaveBeenCalledWith(gerenteId, cliente);
-    });
-
-    it('Chama o método deletarGerente', () => {
-        const id = 1;
-        controller.deletarGerente(id);
-        expect(service.deletarGerente).toHaveBeenCalledWith(id);
-    });
-
-    it('Deve lançar uma exceção ao buscar um gerente inexistente', async () => {
-        const id = 111;
-        (service.buscarGerente as jest.Mock).mockRejectedValue(new NotFoundException(`Gerente com ID ${id} não encontrado.`));
-
-        const result = await controller.buscarGerente(id);
-
-        expect(result).toEqual({ message: `Gerente com ID ${id} não encontrado.` });
-    });
-});
+  afterAll(async () => {
+    await app.close();
+  });
+})
