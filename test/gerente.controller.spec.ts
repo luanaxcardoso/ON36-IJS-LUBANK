@@ -39,7 +39,19 @@ describe('GerenteController (e2e)', () => {
     expect(response.body.nome).toBe('Bernadete Alves');
   });
 
+  it('/gerente/:id (GET)', async () => {
+    const response = await supertest(app.getHttpServer())
+      .get(`/gerente/${gerenteId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    console.log('Resposta do GET:', response.body);
+
+    expect(response.body).toHaveProperty('id', gerenteId);
+    expect(response.body.nome).toBe('Bernadete Alves');
+  });
+
   afterAll(async () => {
     await app.close();
   });
-})
+});
