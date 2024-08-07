@@ -17,10 +17,15 @@ export class ClienteService {
     if (clienteExistente) {
       throw new ConflictException(`Cliente com ID ${cliente.id} já existe.`);
     }
+  
+    cliente.id = this.clientes.length > 0 ? this.clientes[this.clientes.length - 1].id + 1 : 1;
     this.clientes.push(cliente);
     return cliente;
   }
   
+  
+  
+
   buscarCliente(id: number): InterfacePessoa | undefined {
     const cliente = this.clientes.find(cliente => cliente.id === id);
     if (cliente) {
