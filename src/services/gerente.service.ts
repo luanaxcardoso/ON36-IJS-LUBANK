@@ -58,9 +58,23 @@ export class GerenteService {
     return { message: `Gerente com ID ${id} removido com sucesso.` };
   }
 
+  
   async adicionarClienteAoGerente(gerenteId: number, cliente: Cliente): Promise<Gerente> {
-    const gerente = await this.buscarGerente(gerenteId);
-    gerente.adicionarCliente(cliente);
+    // Debugging log
+    console.log('Associando cliente ao gerente:', gerenteId, cliente);
+
+    const gerente = this.gerentes.find(g => g.id === gerenteId);
+    if (!gerente) {
+      throw new NotFoundException(`Gerente com ID ${gerenteId} não encontrado.`);
+    }
+
+    
+    if (!gerente.clientes) {
+      gerente.clientes = []; 
+    }
+
+    gerente.clientes.push(cliente);
+
     return gerente;
   }
 }
