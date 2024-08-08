@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GerenteService } from '../src/services/gerente.service';
-import { Gerente } from '../src/models/gerente.model';
-
+import { GerenteService } from '../../src/services/gerente.service';
+import { Gerente } from '../../src/models/gerente.model';
 
 describe('GerenteService', () => {
   let service: GerenteService;
@@ -27,18 +26,19 @@ describe('GerenteService', () => {
       'SP',
       '123.456.789-00',
       5000,
-      true
+      true,
     );
 
     const criado = await service.criarGerente(gerente);
     gerenteId = criado.id;
 
-    const atualizado = await service.atualizarGerente(gerenteId, { nome: 'Bernadete Serafim Alves' });
+    const atualizado = await service.atualizarGerente(gerenteId, {
+      nome: 'Bernadete Serafim Alves',
+    });
     expect(atualizado?.nome).toBe('Bernadete Serafim Alves');
   });
 
   it('Deve deletar um gerente', async () => {
-    
     const gerente: Gerente = new Gerente(
       2,
       'Bernadete Alves',
@@ -50,7 +50,7 @@ describe('GerenteService', () => {
       'SP',
       '123.456.789-00',
       5000,
-      true
+      true,
     );
 
     const criado = await service.criarGerente(gerente);
@@ -59,11 +59,13 @@ describe('GerenteService', () => {
     expect(gerenteExistente).toBeDefined();
     expect(gerenteExistente.id).toBe(idGerente);
 
-    
     const resultado = await service.deletarGerente(idGerente);
-    expect(resultado.message).toBe(`Gerente com ID ${idGerente} removido com sucesso.`);
+    expect(resultado.message).toBe(
+      `Gerente com ID ${idGerente} removido com sucesso.`,
+    );
 
-    
-    await expect(service.buscarGerente(idGerente)).rejects.toThrowError(`Gerente com ID ${idGerente} não encontrado.`);
+    await expect(service.buscarGerente(idGerente)).rejects.toThrowError(
+      `Gerente com ID ${idGerente} não encontrado.`,
+    );
   });
 });

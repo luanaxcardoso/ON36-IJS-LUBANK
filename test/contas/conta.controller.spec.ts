@@ -1,8 +1,8 @@
 import * as supertest from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
-import { TipoConta } from '../src/enums/tiposconta.enum';
+import { AppModule } from '../../src/app.module';
+import { TipoConta } from '../../src/enums/tiposconta.enum';
 
 describe('ContaController (e2e)', () => {
   let app: INestApplication;

@@ -1,5 +1,5 @@
-import { ContaCorrente } from '../src/models/contas/contacorrente.model';
-import { ContaCorrenteFactory } from '../src/factories/contacorrente.factory';
+import { ContaCorrente } from '../../src/models/contas/contacorrente.model';
+import { ContaCorrenteFactory } from '../../src/factories/contacorrente.factory';
 import { BadRequestException } from '@nestjs/common';
 
 describe('ContaCorrenteFactory', () => {
@@ -9,7 +9,12 @@ describe('ContaCorrenteFactory', () => {
     const clienteId = 2;
     const chequeEspecial = 500;
 
-    const contaCorrente = ContaCorrenteFactory.criarContaCorrente(id, saldo, clienteId, chequeEspecial);
+    const contaCorrente = ContaCorrenteFactory.criarContaCorrente(
+      id,
+      saldo,
+      clienteId,
+      chequeEspecial,
+    );
 
     expect(contaCorrente).toBeInstanceOf(ContaCorrente);
     expect(contaCorrente.id).toBe(id);
@@ -22,10 +27,17 @@ describe('ContaCorrenteFactory', () => {
     const id = 1;
     const saldo = 1000;
     const clienteId = 2;
-    const chequeEspecial = -500; 
+    const chequeEspecial = -500;
 
     expect(() => {
-      ContaCorrenteFactory.criarContaCorrente(id, saldo, clienteId, chequeEspecial);
-    }).toThrow(new BadRequestException('Cheque especial não pode ser negativo'));
+      ContaCorrenteFactory.criarContaCorrente(
+        id,
+        saldo,
+        clienteId,
+        chequeEspecial,
+      );
+    }).toThrow(
+      new BadRequestException('Cheque especial não pode ser negativo'),
+    );
   });
 });

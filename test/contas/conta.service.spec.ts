@@ -1,14 +1,13 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { TipoConta } from "../src/enums/tiposconta.enum";
-import { ContaCorrenteFactory } from "../src/factories/contacorrente.factory";
-import { ContaPoupancaFactory } from "../src/factories/contapoupanca.factory";
-import { ContaCorrente } from "../src/models/contas/contacorrente.model";
-import { ContaPoupanca } from "../src/models/contas/contapoupanca.model";
-import { ContaService } from "../src/services/conta.service";
+import { Test, TestingModule } from '@nestjs/testing';
+import { TipoConta } from '../../src/enums/tiposconta.enum';
+import { ContaCorrenteFactory } from '../../src/factories/contacorrente.factory';
+import { ContaPoupancaFactory } from '../../src/factories/contapoupanca.factory';
+import { ContaCorrente } from '../../src/models/contas/contacorrente.model';
+import { ContaPoupanca } from '../../src/models/contas/contapoupanca.model';
+import { ContaService } from '../../src/services/conta.service';
 
-
-jest.mock('../src/factories/contacorrente.factory');
-jest.mock('../src/factories/contapoupanca.factory');
+jest.mock('../../src/factories/contacorrente.factory');
+jest.mock('../../src/factories/contapoupanca.factory');
 
 describe('ContaService', () => {
   let service: ContaService;
@@ -28,9 +27,17 @@ describe('ContaService', () => {
     const chequeEspecial = 500;
 
     const contaMock = new ContaCorrente(id, saldo, clienteId, chequeEspecial);
-    (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(contaMock);
+    (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(
+      contaMock,
+    );
 
-    const conta = service.criarConta(TipoConta.CONTA_CORRENTE, id, saldo, clienteId, chequeEspecial);
+    const conta = service.criarConta(
+      TipoConta.CONTA_CORRENTE,
+      id,
+      saldo,
+      clienteId,
+      chequeEspecial,
+    );
 
     expect(conta).toBeDefined();
     expect(conta.id).toBe(id);
@@ -47,9 +54,18 @@ describe('ContaService', () => {
     const rendimentoMensal = 1.5;
 
     const contaMock = new ContaPoupanca(id, saldo, clienteId, rendimentoMensal);
-    (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(contaMock);
+    (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(
+      contaMock,
+    );
 
-    const conta = service.criarConta(TipoConta.CONTA_POUPANCA, id, saldo, clienteId, undefined, rendimentoMensal);
+    const conta = service.criarConta(
+      TipoConta.CONTA_POUPANCA,
+      id,
+      saldo,
+      clienteId,
+      undefined,
+      rendimentoMensal,
+    );
 
     expect(conta).toBeDefined();
     expect(conta.id).toBe(id);
@@ -63,10 +79,9 @@ describe('ContaService', () => {
     const id = 3;
     const saldo = 200;
     const clienteId = 3;
-  
+
     expect(() => {
       service.criarConta('CONTA_INVALIDA' as TipoConta, id, saldo, clienteId);
     }).toThrow('Tipo de conta não suportado: CONTA_INVALIDA');
   });
-  
 });

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClienteService } from '../src/services/cliente.service';
-import { ContaService } from '../src/services/conta.service';
-import { InterfacePessoa } from '../src/interfaces/pessoa.interface';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ClienteService } from '../../src/services/cliente.service';
+import { ContaService } from '../../src/services/conta.service';
+import { InterfacePessoa } from '../../src/interfaces/pessoa.interface';
+import { ConflictException } from '@nestjs/common';
 
 const mockContaService = {
   obterConta: jest.fn(),
@@ -33,7 +33,7 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cpf: ''
+      cpf: '',
     };
 
     const resultado = service.adicionarCliente(cliente);
@@ -52,7 +52,7 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cpf: ''
+      cpf: '',
     };
 
     service.adicionarCliente(cliente);
@@ -70,7 +70,7 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cpf: ''
+      cpf: '',
     };
 
     service.adicionarCliente(cliente);
@@ -89,7 +89,7 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cpf: ''
+      cpf: '',
     };
 
     service.adicionarCliente(cliente);
@@ -108,7 +108,7 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cpf: ''
+      cpf: '',
     };
 
     const conta = { id: 1, saldo: 1000 };
@@ -131,12 +131,14 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cpf: ''
+      cpf: '',
     };
 
     service.adicionarCliente(cliente);
     const mensagem = service.deletarCliente(1);
-    expect(mensagem).toEqual({ message: 'Cliente com ID 1 removido com sucesso.' });
+    expect(mensagem).toEqual({
+      message: 'Cliente com ID 1 removido com sucesso.',
+    });
     expect(service.buscarClientes()).not.toContain(cliente);
   });
 });

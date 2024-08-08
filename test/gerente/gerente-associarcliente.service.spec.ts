@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GerenteService } from '../src/services/gerente.service';
-import { Gerente } from '../src/models/gerente.model';
-import { Cliente } from '../src/models/cliente.model';
+import { GerenteService } from '../../src/services/gerente.service';
+import { Gerente } from '../../src/models/gerente.model';
+import { Cliente } from '../../src/models/cliente.model';
 
 describe('GerenteService', () => {
   let service: GerenteService;
@@ -16,7 +16,6 @@ describe('GerenteService', () => {
   });
 
   it('deve adicionar um cliente a um gerente', async () => {
-    
     const gerente: Gerente = new Gerente(
       1,
       'Bernadete Alves',
@@ -28,7 +27,7 @@ describe('GerenteService', () => {
       'SP',
       '123.456.789-00',
       5000,
-      true
+      true,
     );
 
     const cliente: Cliente = {
@@ -43,17 +42,17 @@ describe('GerenteService', () => {
       cpf: '985.653.321-02',
       rendaSalarial: 3000,
       statusAtivo: false,
-      conta: []
+      conta: [],
     };
 
-    
     await service.criarGerente(gerente);
     gerenteId = gerente.id;
 
-    
-    const atualizado = await service.adicionarClienteAoGerente(gerenteId, cliente);
+    const atualizado = await service.adicionarClienteAoGerente(
+      gerenteId,
+      cliente,
+    );
 
-    
     expect(atualizado).toBeDefined();
     expect(atualizado.clientes).toContainEqual(cliente);
   });

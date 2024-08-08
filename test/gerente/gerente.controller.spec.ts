@@ -1,11 +1,11 @@
 import * as supertest from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
+import { AppModule } from '../../src/app.module';
 
 describe('GerenteController (e2e)', () => {
   let app: INestApplication;
-  let gerenteId: number; 
+  let gerenteId: number;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,7 +29,7 @@ describe('GerenteController (e2e)', () => {
         estado: 'SP',
         cpf: '123.456.789-00',
         statusAtivo: true,
-        contas: []
+        contas: [],
       })
       .expect(201)
       .expect('Content-Type', /json/);
