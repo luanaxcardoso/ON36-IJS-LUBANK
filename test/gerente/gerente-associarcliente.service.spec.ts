@@ -57,7 +57,7 @@ describe('GerenteController (e2e) - Associar Cliente', () => {
     const response = await supertest(app.getHttpServer())
       .post(`/gerente/associarcliente/${gerenteId}`)
       .send(cliente)
-      .expect(201)  // Atualizado para esperar 201 Created
+      .expect(201)  
       .expect('Content-Type', /json/);
   
     console.log('Resposta do POST:', response.body);
