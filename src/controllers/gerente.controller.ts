@@ -50,11 +50,13 @@ export class GerenteController {
   }
 
   @Post('associarcliente/:gerenteId')
-  async associarClienteAoGerente(
-    @Param('gerenteId', ParseIntPipe) gerenteId: number,
-    @Body() cliente: Cliente
-  ): Promise<Gerente> {
-    console.log('Associar cliente ao gerente:', gerenteId, cliente);
-    return this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
-  }
+async associarClienteAoGerente(
+  @Param('gerenteId', ParseIntPipe) gerenteId: number,
+  @Body() cliente: Cliente
+): Promise<Gerente> {
+  console.log('Associando cliente ao gerente:', gerenteId, cliente);
+  const gerenteAtualizado = await this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
+  return gerenteAtualizado;
+}
+
 }
