@@ -93,8 +93,8 @@ describe('ClienteService', () => {
     };
 
     service.adicionarCliente(cliente);
-    const atualizado = service.atualizarCliente(1, { nome: 'Marta Silva' });
-    expect(atualizado?.nome).toBe('Marta Silva');
+    const atualizado = service.atualizarCliente(1, { nome: 'Luana Aparecida Cardoso' });
+    expect(atualizado?.nome).toBe('Luana Aparecida Cardoso');
   });
 
   it('deve associar uma conta a um cliente', () => {
