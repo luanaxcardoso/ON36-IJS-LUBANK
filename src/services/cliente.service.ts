@@ -49,14 +49,17 @@ export class ClienteService {
   associarConta(clienteId: number, contaId: number): boolean {
     const cliente = this.clientes.find(c => c.id === clienteId);
     const conta = this.contaService.obterConta(contaId);
-    if (cliente && conta) {
-      if (!cliente.conta) {
-        cliente.conta = [];
-      }
-      cliente.conta.push(conta);
-      return true;
+    if (!cliente) {
+      throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
     }
-    return false;
+    if (!conta) {
+      throw new NotFoundException(`Conta com ID ${contaId} não encontrada.`);
+    }
+    if (!cliente.conta) {
+      cliente.conta = [];
+    }
+    cliente.conta.push(conta);
+    return true;
   }
 
   deletarCliente(id: number): { message: string } {
