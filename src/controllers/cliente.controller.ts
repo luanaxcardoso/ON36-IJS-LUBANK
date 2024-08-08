@@ -13,12 +13,6 @@ export class ClienteController {
     return clienteAdicionado; 
   }
   
-
-  @Post('associarconta')
-  associarConta(@Body() body: { clienteId: number; contaId: number }) {
-    return this.clienteService.associarConta(body.clienteId, body.contaId);
-  }
-
   @Get(':id')
   async buscarCliente(@Param('id', ParseIntPipe) id: number): Promise<InterfacePessoa> {
     const cliente = this.clienteService.buscarCliente(id);
@@ -46,5 +40,10 @@ export class ClienteController {
   deletarCliente(@Param('id', ParseIntPipe) id: number): { message: string } {
     console.log('Recebendo pedido para deletar cliente com id:', id);
     return this.clienteService.deletarCliente(id);
+  }
+
+  @Post('associarconta')
+  associarConta(@Body() body: { clienteId: number; contaId: number }) {
+    return this.clienteService.associarConta(body.clienteId, body.contaId);
   }
 }

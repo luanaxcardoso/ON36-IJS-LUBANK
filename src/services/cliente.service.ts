@@ -46,6 +46,19 @@ export class ClienteService {
     return undefined;
   }
 
+  
+  deletarCliente(id: number): { message: string } {
+    console.log('Deletando cliente com id:', id);
+    const cliente = this.clientes.find(g => g.id === id);
+    if (!cliente) {
+      console.log('Cliente não encontrado.');
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
+    }
+    this.clientes = this.clientes.filter(g => g.id !== id);
+    console.log('Cliente deletado com sucesso.');
+    return { message: `Cliente com ID ${id} removido com sucesso.` };
+  }
+
   associarConta(clienteId: number, contaId: number): boolean {
     const cliente = this.clientes.find(c => c.id === clienteId);
     const conta = this.contaService.obterConta(contaId);
@@ -60,17 +73,5 @@ export class ClienteService {
     }
     cliente.conta.push(conta);
     return true;
-  }
-
-  deletarCliente(id: number): { message: string } {
-    console.log('Deletando cliente com id:', id);
-    const cliente = this.clientes.find(g => g.id === id);
-    if (!cliente) {
-      console.log('Cliente não encontrado.');
-      throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
-    }
-    this.clientes = this.clientes.filter(g => g.id !== id);
-    console.log('Cliente deletado com sucesso.');
-    return { message: `Cliente com ID ${id} removido com sucesso.` };
   }
 }
