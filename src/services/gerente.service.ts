@@ -24,7 +24,7 @@ export class GerenteService {
   }
 
   async buscarGerente(id: number): Promise<Gerente> {
-    console.log('Buscando gerente com id:', id);
+    
     const gerente = this.gerentes.find(g => g.id === id);
     if (!gerente) {
       throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
@@ -60,7 +60,7 @@ export class GerenteService {
 
   
   async adicionarClienteAoGerente(gerenteId: number, cliente: Cliente): Promise<Gerente> {
-    // Debugging log
+    
     console.log('Associando cliente ao gerente:', gerenteId, cliente);
 
     const gerente = this.gerentes.find(g => g.id === gerenteId);
