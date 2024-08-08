@@ -53,19 +53,18 @@ describe('GerenteController (e2e) - Associar Cliente', () => {
       statusAtivo: false,
       contas: [],
     };
-  
+
     const response = await supertest(app.getHttpServer())
       .post(`/gerente/associarcliente/${gerenteId}`)
       .send(cliente)
       .expect(201)  // Atualizado para esperar 201 Created
       .expect('Content-Type', /json/);
-  
+
     console.log('Resposta do POST:', response.body);
-  
+
     expect(response.body).toHaveProperty('id', gerenteId);
     expect(response.body.clientes).toContainEqual(cliente);
   });
-  
 
   afterAll(async () => {
     await app.close();
