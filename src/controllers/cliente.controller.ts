@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Get, Param, Patch, NotFoundException, Delete, ParseIntPipe } from '@nestjs/common';
 import { ClienteService } from '../services/cliente.service';
 import { Cliente } from '../models/cliente.model';
+import { InterfacePessoa } from 'src/interfaces/pessoa.interface';
 
 @Controller('cliente')
 export class ClienteController {
@@ -8,17 +9,12 @@ export class ClienteController {
 
   @Post('adicionar')
   adicionarCliente(@Body() cliente: Cliente) {
-    return this.clienteService.adicionarCliente(cliente);
+    const clienteAdicionado = this.clienteService.adicionarCliente(cliente);
+    return clienteAdicionado; 
   }
-
-  @Post('associarconta')
-  associarConta(@Body() body: { clienteId: number, contaId: number }) {
-    return this.clienteService.associarConta(body.clienteId, body.contaId);
-  }
-
+  
   @Get(':id')
-  async buscarCliente(@Param('id') id: number) {
-    console.log(`Buscar cliente ID: ${id}`);  
+  async buscarCliente(@Param('id', ParseIntPipe) id: number): Promise<InterfacePessoa> {
     const cliente = this.clienteService.buscarCliente(id);
     if (!cliente) {
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
@@ -43,8 +39,11 @@ export class ClienteController {
   @Delete('deletar/:id')
   deletarCliente(@Param('id', ParseIntPipe) id: number): { message: string } {
     console.log('Recebendo pedido para deletar cliente com id:', id);
-    this.clienteService.deletarCliente(id);
-    return { message: `Cliente removido com sucesso.` };
+    return this.clienteService.deletarCliente(id);
   }
-  
+
+  @Post('associarconta')
+  associarConta(@Body() body: { clienteId: number; contaId: number }) {
+    return this.clienteService.associarConta(body.clienteId, body.contaId);
+  }
 }

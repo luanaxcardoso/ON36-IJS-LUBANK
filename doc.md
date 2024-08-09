@@ -57,5 +57,33 @@ A herança permite reutilizar código e estender funcionalidades de forma simple
 - Foi adicionada Factory Method para a criação de contas
 - Foi adicionada a classe ContaPoupanca que herda de Conta e implementa a interface Rendimento mensal
 - Foi adicionada a classe ContaCorrente que herda de Conta e implementa a interface Cheque Especial
-  
 
+---
+
+## Semana 05
+
+### Testes automatizados e TDD
+
+- Instalar as dependências do Jest e do ts-jest
+
+```bash	
+npm install --save-dev jest @nestjs/testing ts-jest
+
+npx jest --init 
+````
+
+- Para rodar os testes       
+
+```bash
+npm run test:e2e 
+```
+ou
+
+```bash
+npm test
+```
+
+- Implementação de testes unitários e de integração
+- Uso de ferramentas como Jest 
+- Uso de mocks para simular comportamentos
+- Uso de TDD para guiar o desenvolvimento

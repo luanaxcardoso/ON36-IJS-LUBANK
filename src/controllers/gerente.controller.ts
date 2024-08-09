@@ -1,65 +1,62 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { GerenteService } from '../services/gerente.service';
 import { Gerente } from '../models/gerente.model';
-import { Cliente } from 'src/models/cliente.model';
+import { Cliente } from '../models/cliente.model';
 
 @Controller('gerente')
 export class GerenteController {
   constructor(private readonly gerenteService: GerenteService) {}
 
   @Post('criar')
-  criarGerente(@Body() gerente: Gerente): Gerente {
+  async criarGerente(@Body() gerente: Gerente): Promise<Gerente> {
     console.log('Recebendo pedido para criar gerente:', gerente);
     return this.gerenteService.criarGerente(gerente);
   }
 
   @Get(':id')
-  buscarGerente(
-    @Param('id', ParseIntPipe) id: number
-  ): Gerente | { message: string } {
+  async buscarGerente(@Param('id', ParseIntPipe) id: number): Promise<Gerente> {
     console.log('Recebendo pedido para buscar gerente com id:', id);
-    try {
-      return this.gerenteService.buscarGerente(id);
-    } catch (error) {
-      console.error('Erro ao buscar gerente:', error.message);
-      return { message: error.message };
-    }
+    return this.gerenteService.buscarGerente(id);
   }
 
   @Get()
-  buscarGerentes(): Gerente[] {
+  async buscarGerentes(): Promise<Gerente[]> {
     console.log('Recebendo pedido para buscar todos os gerentes');
     return this.gerenteService.buscarGerentes();
   }
 
   @Patch('atualizar/:id')
-  atualizarGerente(
-    @Param('id') id: number,
+  async atualizarGerente(
+    @Param('id', ParseIntPipe) id: number,
     @Body() gerenteAtualizado: Partial<Gerente>,
-  ): Gerente | undefined {
+  ): Promise<Gerente> {
     console.log(`Recebendo pedido para atualizar gerente com id ${id}:`, gerenteAtualizado);
     return this.gerenteService.atualizarGerente(id, gerenteAtualizado);
   }
 
   @Delete('deletar/:id')
-  deletarGerente(
-    @Param('id', ParseIntPipe) id: number
-  ): { message: string } {
+  async deletarGerente(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
     console.log('Recebendo pedido para deletar gerente com id:', id);
     return this.gerenteService.deletarGerente(id);
   }
 
-   @Post('associarcliente/:gerenteId')
-  associarClienteAoGerente(
-    @Param('gerenteId', ParseIntPipe) gerenteId: number,
-    @Body() cliente: Cliente
-  ): Gerente | { message: string } {
-    console.log('Associar cliente ao gerente:', gerenteId, cliente);
-    try {
-      return this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
-    } catch (error) {
-      console.error('Erro ao associar cliente ao gerente:', error.message);
-      return { message: error.message };
-    }
-  }
+  @Post('associarcliente/:gerenteId')
+async associarClienteAoGerente(
+  @Param('gerenteId', ParseIntPipe) gerenteId: number,
+  @Body() cliente: Cliente
+): Promise<Gerente> {
+  console.log('Associando cliente ao gerente:', gerenteId, cliente);
+  const gerenteAtualizado = await this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
+  return gerenteAtualizado;
+}
+
 }

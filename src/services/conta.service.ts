@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+// services/conta.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Conta } from '../models/contas/conta.model';
-import { TipoConta } from 'src/enums/tiposconta.enum';
-import { ContaCorrenteFactory } from 'src/factories/contacorrente.factory';
-import { ContaPoupancaFactory } from 'src/factories/contapoupança.factory';
-
+import { TipoConta } from '../enums/tiposconta.enum';
+import { ContaCorrenteFactory } from '../factories/contacorrente.factory';
+import { ContaPoupancaFactory } from '../factories/contapoupanca.factory';
 
 @Injectable()
 export class ContaService {
@@ -51,7 +51,11 @@ export class ContaService {
   }
 
   removerConta(id: number): void {
-    this.contas = this.contas.filter(conta => conta.id !== id);
+    const contaIndex = this.contas.findIndex(conta => conta.id === id);
+    if (contaIndex === -1) {
+      throw new NotFoundException(`Conta com ID ${id} não encontrada.`);
+    }
+    this.contas.splice(contaIndex, 1);
   }
 
   removerContasPorCliente(idCliente: number): void {
