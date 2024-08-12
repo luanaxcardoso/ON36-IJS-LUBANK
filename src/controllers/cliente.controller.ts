@@ -1,11 +1,15 @@
-import { Controller, Post, Body, Get, Param, Patch, NotFoundException, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, NotFoundException, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { ClienteService } from '../services/cliente.service';
 import { Cliente } from '../models/cliente.model';
 import { InterfacePessoa } from 'src/interfaces/pessoa.interface';
+import { ViaCepService } from '../services/viacep.service'; 
 
 @Controller('cliente')
 export class ClienteController {
-  constructor(private readonly clienteService: ClienteService) {}
+  constructor(
+    private readonly clienteService: ClienteService,
+    private readonly viaCepService: ViaCepService 
+  ) {}
 
   @Post('adicionar')
   adicionarCliente(@Body() cliente: Cliente) {
@@ -45,5 +49,18 @@ export class ClienteController {
   @Post('associarconta')
   associarConta(@Body() body: { clienteId: number; contaId: number }) {
     return this.clienteService.associarConta(body.clienteId, body.contaId);
+  }
+
+  @Get('testarviacep')
+  async testarViaCep(@Query('cep') cep: string) {
+    console.log(`Consultando CEP: ${cep}`);
+    try {
+      const resultado = await this.viaCepService.consultarCep(cep);
+      console.log('Resultado da consulta:', resultado);
+      return resultado;
+    } catch (error) {
+      console.error('Erro ao consultar CEP:', error);
+      throw error; 
+    }
   }
 }

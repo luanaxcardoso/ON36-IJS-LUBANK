@@ -25,6 +25,7 @@ describe('GerenteService', () => {
       'São Paulo',
       'SP',
       '123.456.789-00',
+      '12246001',
       5000,
       true,
     );
@@ -49,6 +50,7 @@ describe('GerenteService', () => {
       'São Paulo',
       'SP',
       '123.456.789-00',
+      '12246001', 
       5000,
       true,
     );

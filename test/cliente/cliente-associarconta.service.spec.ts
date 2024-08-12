@@ -1,10 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClienteService } from '../../src/services/cliente.service';
 import { ContaService } from '../../src/services/conta.service';
+import { ViaCepService } from '../../src/services/viacep.service'; 
 import { InterfacePessoa } from '../../src/interfaces/pessoa.interface';
 
 const mockContaService = {
   obterConta: jest.fn(),
+};
+
+const mockViaCepService = {
+  consultarCep: jest.fn(), 
 };
 
 describe('ClienteService', () => {
@@ -15,6 +20,7 @@ describe('ClienteService', () => {
       providers: [
         ClienteService,
         { provide: ContaService, useValue: mockContaService },
+        { provide: ViaCepService, useValue: mockViaCepService }, 
       ],
     }).compile();
 
@@ -32,6 +38,7 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
+      cep: '12246-001',
       cpf: '',
     };
 

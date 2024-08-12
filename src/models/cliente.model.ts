@@ -11,6 +11,7 @@ export class Cliente implements InterfacePessoa {
     public endereco: string,
     public cidade: string,
     public estado: string,
+    public cep: string,
     public cpf: string,
     public rendaSalarial: number,
     public statusAtivo: boolean,

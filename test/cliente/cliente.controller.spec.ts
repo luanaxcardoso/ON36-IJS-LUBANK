@@ -6,6 +6,7 @@ import { AppModule } from '../../src/app.module';
 describe('ClienteController (e2e)', () => {
   let app: INestApplication;
   let clienteId: number;
+  
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,6 +28,7 @@ describe('ClienteController (e2e)', () => {
         endereco: 'Rua Machado de Assis, 123, Apto 45',
         cidade: 'São Paulo',
         estado: 'SP',
+        cep: '12246001',
         cpf: '365.968.456-00',
         rendaSalarial: 3000,
         statusAtivo: true,

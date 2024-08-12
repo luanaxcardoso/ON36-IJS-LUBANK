@@ -48,6 +48,7 @@ describe('GerenteController (e2e) - Associar Cliente', () => {
       endereco: 'Avenida Paulista, 1010',
       cidade: 'São Paulo',
       estado: 'SP',
+      cep: '12246001',
       cpf: '985.653.321-02',
       rendaSalarial: 3000,
       statusAtivo: false,

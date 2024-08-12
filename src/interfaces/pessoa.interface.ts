@@ -9,6 +9,7 @@ export interface InterfacePessoa {
   endereco: string;
   cidade: string;
   estado: string;
+  cep: string;
   cpf: string;
   rendaSalarial?: number;
   statusAtivo?: boolean;

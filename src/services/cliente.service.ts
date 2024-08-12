@@ -2,15 +2,20 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InterfacePessoa } from '../interfaces/pessoa.interface';
 import { ContaService } from '../services/conta.service';
+import { ViaCepService } from '../services/viacep.service'; // Importa o ViaCepService
 
 @Injectable()
 export class ClienteService {
   private clientes: InterfacePessoa[] = []; 
 
-  constructor(private readonly contaService: ContaService) {}
+  constructor(
+    private readonly contaService: ContaService,
+    private readonly viaCepService: ViaCepService, 
+  ) {}
 
   adicionarCliente(cliente: InterfacePessoa): InterfacePessoa {
     const clienteExistente = this.clientes.find(c => c.id === cliente.id);
@@ -46,7 +51,6 @@ export class ClienteService {
     return undefined;
   }
 
-  
   deletarCliente(id: number): { message: string } {
     console.log('Deletando cliente com id:', id);
     const cliente = this.clientes.find(g => g.id === id);
@@ -73,5 +77,19 @@ export class ClienteService {
     }
     cliente.conta.push(conta);
     return true;
+  }
+
+  async consultarCep(clienteId: number): Promise<any> {
+    const cliente = this.buscarCliente(clienteId);
+    if (!cliente) {
+      throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
+    }
+    
+    if (!cliente.cep) {
+      throw new BadRequestException(`Cliente com ID ${clienteId} não possui CEP.`);
+    }
+
+    const endereco = await this.viaCepService.consultarCep(cliente.cep);
+    return endereco;
   }
 }
