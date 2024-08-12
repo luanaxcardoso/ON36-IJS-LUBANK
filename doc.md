@@ -87,3 +87,18 @@ npm test
 - Uso de ferramentas como Jest 
 - Uso de mocks para simular comportamentos
 - Uso de TDD para guiar o desenvolvimento
+
+---
+
+## Semana 06
+
+### Integração da API viacep
+
+- Uso da API viacep para obter informações de endereços a partir de um CEP
+- Implementação de um serviço para consumir a API viacep
+
+### instalação do axios para fazer requisições HTTP
+
+```bash
+npm install @nestjs/axios
+```
