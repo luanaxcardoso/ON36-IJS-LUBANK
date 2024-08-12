@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InterfacePessoa } from '../interfaces/pessoa.interface';
 import { ContaService } from '../services/conta.service';
-import { ViaCepService } from '../services/viacep.service'; // Importa o ViaCepService
+import { ViaCepService } from '../services/viacep.service'; 
 
 @Injectable()
 export class ClienteService {
