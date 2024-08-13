@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClienteService } from '../../src/services/cliente.service';
-import { ContaService } from '../../src/services/conta.service';
-import { ViaCepService } from '../../src/services/viacep.service'; 
-import { InterfacePessoa } from '../../src/interfaces/pessoa.interface';
+import { ClienteService } from '../../src/application/services/cliente.service';
+import { ContaService } from '../../src/application/services/conta.service';
+import { ViaCepService } from '../../src/application/services/viacep.service';
+import { InterfacePessoa } from '../../src/domain/interfaces/pessoa.interface';
 import { ConflictException } from '@nestjs/common';
 
 const mockContaService = {
@@ -41,7 +41,6 @@ describe('ClienteService', () => {
       estado: '',
       cep: '12246001',
       cpf: '',
-       
     };
 
     const resultado = service.adicionarCliente(cliente);
@@ -62,7 +61,6 @@ describe('ClienteService', () => {
       estado: '',
       cep: '12246001',
       cpf: '',
-       
     };
 
     service.adicionarCliente(cliente);
@@ -82,7 +80,6 @@ describe('ClienteService', () => {
       estado: '',
       cep: '12246001',
       cpf: '',
-       
     };
 
     service.adicionarCliente(cliente);
@@ -101,13 +98,15 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cep: '12246001', 
+      cep: '12246001',
       cpf: '',
-      
     };
 
     service.adicionarCliente(cliente);
-    const atualizado = service.atualizarCliente(1, { nome: 'Luana Aparecida Cardoso', cep: '12345678' });
+    const atualizado = service.atualizarCliente(1, {
+      nome: 'Luana Aparecida Cardoso',
+      cep: '12345678',
+    });
     expect(atualizado?.nome).toBe('Luana Aparecida Cardoso');
     expect(atualizado?.cep).toBe('12345678');
   });
@@ -123,9 +122,8 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cep: '12246001', 
+      cep: '12246001',
       cpf: '',
-      
     };
 
     const conta = { id: 1, saldo: 1000 };
@@ -150,7 +148,6 @@ describe('ClienteService', () => {
       estado: '',
       cep: '12246001',
       cpf: '',
-       
     };
 
     service.adicionarCliente(cliente);
@@ -172,12 +169,16 @@ describe('ClienteService', () => {
       endereco: '',
       cidade: '',
       estado: '',
-      cep: '12246001', 
+      cep: '12246001',
       cpf: '',
-      
     };
 
-    const endereco = { logradouro: 'Rua Exemplo', bairro: 'Centro', cidade: 'São Paulo', uf: 'SP' };
+    const endereco = {
+      logradouro: 'Rua Exemplo',
+      bairro: 'Centro',
+      cidade: 'São Paulo',
+      uf: 'SP',
+    };
     mockViaCepService.consultarCep.mockReturnValue(endereco);
 
     service.adicionarCliente(cliente);
@@ -201,10 +202,14 @@ describe('ClienteService', () => {
     };
 
     service.adicionarCliente(cliente);
-    await expect(service.consultarCep(1)).rejects.toThrow('Cliente com ID 1 não possui CEP.');
+    await expect(service.consultarCep(1)).rejects.toThrow(
+      'Cliente com ID 1 não possui CEP.',
+    );
   });
 
   it('Deve lançar exceção ao consultar CEP de cliente inexistente', async () => {
-    await expect(service.consultarCep(999)).rejects.toThrow('Cliente com ID 999 não encontrado.');
+    await expect(service.consultarCep(999)).rejects.toThrow(
+      'Cliente com ID 999 não encontrado.',
+    );
   });
 });

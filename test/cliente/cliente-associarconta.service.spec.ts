@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClienteService } from '../../src/services/cliente.service';
-import { ContaService } from '../../src/services/conta.service';
-import { ViaCepService } from '../../src/services/viacep.service'; 
-import { InterfacePessoa } from '../../src/interfaces/pessoa.interface';
+import { ClienteService } from '../../src/application/services/cliente.service';
+import { ContaService } from '../../src/application/services/conta.service';
+import { ViaCepService } from '../../src/application/services/viacep.service';
+import { InterfacePessoa } from '../../src/domain/interfaces/pessoa.interface';
 
 const mockContaService = {
   obterConta: jest.fn(),
 };
 
 const mockViaCepService = {
-  consultarCep: jest.fn(), 
+  consultarCep: jest.fn(),
 };
 
 describe('ClienteService', () => {
@@ -20,7 +20,7 @@ describe('ClienteService', () => {
       providers: [
         ClienteService,
         { provide: ContaService, useValue: mockContaService },
-        { provide: ViaCepService, useValue: mockViaCepService }, 
+        { provide: ViaCepService, useValue: mockViaCepService },
       ],
     }).compile();
 

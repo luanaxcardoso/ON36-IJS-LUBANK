@@ -1,4 +1,4 @@
-import { Conta } from '../models/contas/conta.model';
+import { Conta } from '../../domain/models/contas/conta.model';
 
 export interface InterfacePessoa {
   id: number;

@@ -8,9 +8,9 @@ import {
   Body,
   ParseIntPipe,
 } from '@nestjs/common';
-import { GerenteService } from '../services/gerente.service';
-import { Gerente } from '../models/gerente.model';
-import { Cliente } from '../models/cliente.model';
+import { GerenteService } from '../../application/services/gerente.service';
+import { Gerente } from '../../domain/models/gerente.model';
+import { Cliente } from '../../domain/models/cliente.model';
 
 @Controller('gerente')
 export class GerenteController {
@@ -39,24 +39,29 @@ export class GerenteController {
     @Param('id', ParseIntPipe) id: number,
     @Body() gerenteAtualizado: Partial<Gerente>,
   ): Promise<Gerente> {
-    console.log(`Recebendo pedido para atualizar gerente com id ${id}:`, gerenteAtualizado);
+    console.log(
+      `Recebendo pedido para atualizar gerente com id ${id}:`,
+      gerenteAtualizado,
+    );
     return this.gerenteService.atualizarGerente(id, gerenteAtualizado);
   }
 
   @Delete('deletar/:id')
-  async deletarGerente(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
+  async deletarGerente(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
     console.log('Recebendo pedido para deletar gerente com id:', id);
     return this.gerenteService.deletarGerente(id);
   }
 
   @Post('associarcliente/:gerenteId')
-async associarClienteAoGerente(
-  @Param('gerenteId', ParseIntPipe) gerenteId: number,
-  @Body() cliente: Cliente
-): Promise<Gerente> {
-  console.log('Associando cliente ao gerente:', gerenteId, cliente);
-  const gerenteAtualizado = await this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
-  return gerenteAtualizado;
-}
-
+  async associarClienteAoGerente(
+    @Param('gerenteId', ParseIntPipe) gerenteId: number,
+    @Body() cliente: Cliente,
+  ): Promise<Gerente> {
+    console.log('Associando cliente ao gerente:', gerenteId, cliente);
+    const gerenteAtualizado =
+      await this.gerenteService.adicionarClienteAoGerente(gerenteId, cliente);
+    return gerenteAtualizado;
+  }
 }

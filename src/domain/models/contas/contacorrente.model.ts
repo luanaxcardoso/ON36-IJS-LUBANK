@@ -7,10 +7,7 @@ export class ContaCorrente extends Conta {
     saldo: number,
     clienteId: number,
     public chequeEspecial: number,
-    
   ) {
     super(id, TipoConta.CONTA_CORRENTE, saldo, clienteId);
   }
 }
-
-

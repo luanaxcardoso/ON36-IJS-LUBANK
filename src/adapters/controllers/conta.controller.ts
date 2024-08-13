@@ -1,7 +1,17 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe, NotFoundException } from '@nestjs/common';
-import { ContaService } from '../services/conta.service';
-import { TipoConta } from '../enums/tiposconta.enum';
-import { Conta } from '../models/contas/conta.model';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+  NotFoundException,
+} from '@nestjs/common';
+import { ContaService } from '../../application/services/conta.service';
+import { TipoConta } from '../../domain/enums/tiposconta.enum';
+import { Conta } from '../../domain/models/contas/conta.model';
 
 @Controller('conta')
 export class ContaController {
@@ -16,7 +26,14 @@ export class ContaController {
     @Body('chequeEspecial') chequeEspecial?: number,
     @Body('rendimentoMensal') rendimentoMensal?: number,
   ): Conta {
-    return this.contaService.criarConta(tipo, id, saldo, clienteId, chequeEspecial, rendimentoMensal);
+    return this.contaService.criarConta(
+      tipo,
+      id,
+      saldo,
+      clienteId,
+      chequeEspecial,
+      rendimentoMensal,
+    );
   }
 
   @Get(':id')
@@ -48,7 +65,9 @@ export class ContaController {
   }
 
   @Delete('removerporcliente/:clienteId')
-  removerContasPorCliente(@Param('clienteId', ParseIntPipe) clienteId: number): { message: string } {
+  removerContasPorCliente(
+    @Param('clienteId', ParseIntPipe) clienteId: number,
+  ): { message: string } {
     this.contaService.removerContasPorCliente(clienteId);
     return { message: `Contas removidas com sucesso.` };
   }

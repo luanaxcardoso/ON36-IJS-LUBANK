@@ -1,24 +1,37 @@
-import { Controller, Post, Body, Get, Param, Patch, NotFoundException, Delete, ParseIntPipe, Query } from '@nestjs/common';
-import { ClienteService } from '../services/cliente.service';
-import { Cliente } from '../models/cliente.model';
-import { InterfacePessoa } from 'src/interfaces/pessoa.interface';
-import { ViaCepService } from '../services/viacep.service'; 
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Patch,
+  NotFoundException,
+  Delete,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import { ClienteService } from '../../application/services/cliente.service';
+import { Cliente } from '../../domain/models/cliente.model';
+import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
+import { ViaCepService } from '../../application/services/viacep.service';
 
 @Controller('cliente')
 export class ClienteController {
   constructor(
     private readonly clienteService: ClienteService,
-    private readonly viaCepService: ViaCepService 
+    private readonly viaCepService: ViaCepService,
   ) {}
 
   @Post('adicionar')
   adicionarCliente(@Body() cliente: Cliente) {
     const clienteAdicionado = this.clienteService.adicionarCliente(cliente);
-    return clienteAdicionado; 
+    return clienteAdicionado;
   }
-  
+
   @Get(':id')
-  async buscarCliente(@Param('id', ParseIntPipe) id: number): Promise<InterfacePessoa> {
+  async buscarCliente(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<InterfacePessoa> {
     const cliente = this.clienteService.buscarCliente(id);
     if (!cliente) {
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
@@ -28,14 +41,14 @@ export class ClienteController {
 
   @Get()
   async buscarClientes() {
-    console.log(`Todos os clientes.`);  
+    console.log(`Todos os clientes.`);
     return this.clienteService.buscarClientes();
   }
 
   @Patch('atualizar/:id')
   atualizarCliente(
     @Param('id', ParseIntPipe) id: number,
-    @Body() atualizarCliente: Partial<Cliente>
+    @Body() atualizarCliente: Partial<Cliente>,
   ) {
     return this.clienteService.atualizarCliente(id, atualizarCliente);
   }
@@ -60,7 +73,7 @@ export class ClienteController {
       return resultado;
     } catch (error) {
       console.error('Erro ao consultar CEP:', error);
-      throw error; 
+      throw error;
     }
   }
 }

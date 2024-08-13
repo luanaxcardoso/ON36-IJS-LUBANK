@@ -1,4 +1,4 @@
-import { ContaPoupanca } from '../models/contas/contapoupanca.model';
+import { ContaPoupanca } from '../../domain/models/contas/contapoupanca.model';
 import { BadRequestException } from '@nestjs/common';
 
 export class ContaPoupancaFactory {

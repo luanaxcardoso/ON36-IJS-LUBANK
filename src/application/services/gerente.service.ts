@@ -3,20 +3,23 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { Gerente } from '../models/gerente.model';
-import { Cliente } from '../models/cliente.model';
+import { Gerente } from '../../domain/models/gerente.model';
+import { Cliente } from '../../domain/models/cliente.model';
 
 @Injectable()
 export class GerenteService {
   private gerentes: Gerente[] = [];
 
   async criarGerente(gerente: Gerente): Promise<Gerente> {
-    const gerenteExistente = this.gerentes.find(g => g.id === gerente.id);
+    const gerenteExistente = this.gerentes.find((g) => g.id === gerente.id);
     if (gerenteExistente) {
       throw new ConflictException(`Gerente com ID ${gerente.id} já existe.`);
     }
 
-    gerente.id = this.gerentes.length > 0 ? this.gerentes[this.gerentes.length - 1].id + 1 : 1;
+    gerente.id =
+      this.gerentes.length > 0
+        ? this.gerentes[this.gerentes.length - 1].id + 1
+        : 1;
     console.log('Criando gerente:', gerente);
     this.gerentes.push(gerente);
     console.log('Gerente após criação:', this.gerentes);
@@ -24,8 +27,7 @@ export class GerenteService {
   }
 
   async buscarGerente(id: number): Promise<Gerente> {
-    
-    const gerente = this.gerentes.find(g => g.id === id);
+    const gerente = this.gerentes.find((g) => g.id === id);
     if (!gerente) {
       throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
     }
@@ -36,8 +38,11 @@ export class GerenteService {
     return this.gerentes;
   }
 
-  async atualizarGerente(id: number, gerenteAtualizado: Partial<Gerente>): Promise<Gerente> {
-    const gerenteIndex = this.gerentes.findIndex(g => g.id === id);
+  async atualizarGerente(
+    id: number,
+    gerenteAtualizado: Partial<Gerente>,
+  ): Promise<Gerente> {
+    const gerenteIndex = this.gerentes.findIndex((g) => g.id === id);
     if (gerenteIndex === -1) {
       throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
     }
@@ -49,28 +54,30 @@ export class GerenteService {
 
   async deletarGerente(id: number): Promise<{ message: string }> {
     console.log('Deletando gerente com id:', id);
-    const gerente = this.gerentes.find(g => g.id === id);
+    const gerente = this.gerentes.find((g) => g.id === id);
     if (!gerente) {
       throw new NotFoundException(`Gerente com ID ${id} não encontrado.`);
     }
-    this.gerentes = this.gerentes.filter(g => g.id !== id);
+    this.gerentes = this.gerentes.filter((g) => g.id !== id);
     console.log('Gerente deletado com sucesso.');
     return { message: `Gerente com ID ${id} removido com sucesso.` };
   }
 
-  
-  async adicionarClienteAoGerente(gerenteId: number, cliente: Cliente): Promise<Gerente> {
-    
+  async adicionarClienteAoGerente(
+    gerenteId: number,
+    cliente: Cliente,
+  ): Promise<Gerente> {
     console.log('Associando cliente ao gerente:', gerenteId, cliente);
 
-    const gerente = this.gerentes.find(g => g.id === gerenteId);
+    const gerente = this.gerentes.find((g) => g.id === gerenteId);
     if (!gerente) {
-      throw new NotFoundException(`Gerente com ID ${gerenteId} não encontrado.`);
+      throw new NotFoundException(
+        `Gerente com ID ${gerenteId} não encontrado.`,
+      );
     }
 
-    
     if (!gerente.clientes) {
-      gerente.clientes = []; 
+      gerente.clientes = [];
     }
 
     gerente.clientes.push(cliente);

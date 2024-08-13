@@ -1,5 +1,5 @@
-import { ContaCorrente } from '../../src/models/contas/contacorrente.model';
-import { ContaCorrenteFactory } from '../../src/factories/contacorrente.factory';
+import { ContaCorrente } from '../../src/domain/models/contas/contacorrente.model';
+import { ContaCorrenteFactory } from '../../src/domain/factories/contacorrente.factory';
 import { BadRequestException } from '@nestjs/common';
 
 describe('ContaCorrenteFactory', () => {

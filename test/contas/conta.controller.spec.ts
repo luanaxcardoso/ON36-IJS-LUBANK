@@ -2,7 +2,7 @@ import * as supertest from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/app.module';
-import { TipoConta } from '../../src/enums/tiposconta.enum';
+import { TipoConta } from '../../src/domain/enums/tiposconta.enum';
 
 describe('ContaController (e2e)', () => {
   let app: INestApplication;
@@ -17,7 +17,6 @@ describe('ContaController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    
     const clienteResponse = await supertest(app.getHttpServer())
       .post('/cliente/adicionar')
       .send({
@@ -31,7 +30,7 @@ describe('ContaController (e2e)', () => {
         cpf: '365.968.456-00',
         rendaSalarial: 3000,
         statusAtivo: true,
-        conta: []
+        conta: [],
       })
       .expect(201)
       .expect('Content-Type', /json/);
@@ -47,7 +46,7 @@ describe('ContaController (e2e)', () => {
         id: 1,
         saldo: 1000,
         clienteId: clienteId,
-        chequeEspecial: 500
+        chequeEspecial: 500,
       })
       .expect(201)
       .expect('Content-Type', /json/);
@@ -68,7 +67,7 @@ describe('ContaController (e2e)', () => {
     expect(response.body).toHaveProperty('id', contaId);
     expect(response.body.saldo).toBe(1000);
   });
-  
+
   it('/conta/atualizar/:id (PATCH)', async () => {
     await supertest(app.getHttpServer())
       .patch(`/conta/atualizar/${contaId}`)
@@ -92,13 +91,10 @@ describe('ContaController (e2e)', () => {
       .expect('Content-Type', /json/)
       .expect({ message: `Conta removida com sucesso.` });
 
-      await supertest(app.getHttpServer())
-      .get(`/conta/${contaId}`)
-      .expect(404);
+    await supertest(app.getHttpServer()).get(`/conta/${contaId}`).expect(404);
   });
-  
+
   afterAll(async () => {
     await app.close();
   });
-
 });

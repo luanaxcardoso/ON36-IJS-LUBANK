@@ -1,6 +1,6 @@
-import { InterfacePessoa } from '../interfaces/pessoa.interface';
-import { Cliente } from '../models/cliente.model';
-import { Conta } from '../models/contas/conta.model';
+import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
+import { Cliente } from './cliente.model';
+import { Conta } from './contas/conta.model';
 
 export class Gerente implements InterfacePessoa {
   clientes: Cliente[] = [];

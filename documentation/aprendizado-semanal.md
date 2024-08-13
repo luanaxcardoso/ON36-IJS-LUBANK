@@ -102,3 +102,27 @@ npm test
 ```bash
 npm install @nestjs/axios
 ```
+
+### Arquitetura Hexagonal
+
+- Separação de responsabilidades em camadas
+- Criação das pastas: adapters, application, domain, documentacion, infrastructure
+  
+  src/
+├── Adapters/
+|   ├── 
+│   ├──> Controllers/
+│   │  
+│   ├── 
+├── Application/
+│   ├── 
+│   ├──> Services/
+│   ├── 
+├── Domain/
+│   ├── enums/
+│   ├── factories/
+│   ├── interfaces/
+│   └── models/
+|
+|── ----------------------------
+---

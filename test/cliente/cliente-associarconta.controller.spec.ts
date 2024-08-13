@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { ClienteService } from '../../src/services/cliente.service';
-import { ClienteController } from '../../src/controllers/cliente.controller';
-import { ViaCepService } from '../../src/services/viacep.service';
+import { ClienteService } from '../../src/application/services/cliente.service';
+import { ClienteController } from '../../src/adapters/controllers/cliente.controller';
+import { ViaCepService } from '../../src/application/services/viacep.service';
 
 const mockClienteService = {
   associarConta: jest.fn(),
@@ -41,7 +41,10 @@ describe('ClienteController (e2e)', () => {
       .expect(201);
 
     expect(response.text).toBe('true');
-    expect(clienteService.associarConta).toHaveBeenCalledWith(clienteId, contaId);
+    expect(clienteService.associarConta).toHaveBeenCalledWith(
+      clienteId,
+      contaId,
+    );
   });
 
   afterAll(async () => {

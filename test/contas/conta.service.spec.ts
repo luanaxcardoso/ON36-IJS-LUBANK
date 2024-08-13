@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TipoConta } from '../../src/enums/tiposconta.enum';
-import { ContaCorrenteFactory } from '../../src/factories/contacorrente.factory';
-import { ContaPoupancaFactory } from '../../src/factories/contapoupanca.factory';
-import { ContaCorrente } from '../../src/models/contas/contacorrente.model';
-import { ContaPoupanca } from '../../src/models/contas/contapoupanca.model';
-import { ContaService } from '../../src/services/conta.service';
+import { TipoConta } from '../../src/domain/enums/tiposconta.enum';
+import { ContaCorrenteFactory } from '../../src/domain/factories/contacorrente.factory';
+import { ContaPoupancaFactory } from '../../src/domain/factories/contapoupanca.factory';
+import { ContaCorrente } from '../../src/domain/models/contas/contacorrente.model';
+import { ContaPoupanca } from '../../src/domain/models/contas/contapoupanca.model';
+import { ContaService } from '../../src/application/services/conta.service';
 
 jest.mock('../../src/factories/contacorrente.factory');
 jest.mock('../../src/factories/contapoupanca.factory');

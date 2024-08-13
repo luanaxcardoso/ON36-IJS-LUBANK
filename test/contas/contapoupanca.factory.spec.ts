@@ -1,5 +1,5 @@
-import { ContaPoupanca } from '../../src/models/contas/contapoupanca.model';
-import { ContaPoupancaFactory } from '../../src/factories/contapoupanca.factory';
+import { ContaPoupanca } from '../../src/domain/models/contas/contapoupanca.model';
+import { ContaPoupancaFactory } from '../../src/domain/factories/contapoupanca.factory';
 import { BadRequestException } from '@nestjs/common';
 
 describe('ContaPoupancaFactory', () => {

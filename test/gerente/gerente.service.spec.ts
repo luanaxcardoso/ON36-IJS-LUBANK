@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GerenteService } from '../../src/services/gerente.service';
-import { Gerente } from '../../src/models/gerente.model';
+import { GerenteService } from '../../src/application/services/gerente.service';
+import { Gerente } from '../../src/domain/models/gerente.model';
 
 describe('GerenteService', () => {
   let service: GerenteService;
@@ -50,7 +50,7 @@ describe('GerenteService', () => {
       'São Paulo',
       'SP',
       '123.456.789-00',
-      '12246001', 
+      '12246001',
       5000,
       true,
     );

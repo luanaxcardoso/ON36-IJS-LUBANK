@@ -1,4 +1,4 @@
-import { ContaCorrente } from '../models/contas/contacorrente.model';
+import { ContaCorrente } from '../../domain/models/contas/contacorrente.model';
 import { BadRequestException } from '@nestjs/common';
 
 export class ContaCorrenteFactory {

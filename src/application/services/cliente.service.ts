@@ -4,34 +4,37 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { InterfacePessoa } from '../interfaces/pessoa.interface';
+import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
 import { ContaService } from '../services/conta.service';
-import { ViaCepService } from '../services/viacep.service'; 
+import { ViaCepService } from '../services/viacep.service';
 
 @Injectable()
 export class ClienteService {
-  private clientes: InterfacePessoa[] = []; 
+  private clientes: InterfacePessoa[] = [];
 
   constructor(
     private readonly contaService: ContaService,
-    private readonly viaCepService: ViaCepService, 
+    private readonly viaCepService: ViaCepService,
   ) {}
 
   adicionarCliente(cliente: InterfacePessoa): InterfacePessoa {
-    const clienteExistente = this.clientes.find(c => c.id === cliente.id);
+    const clienteExistente = this.clientes.find((c) => c.id === cliente.id);
     if (clienteExistente) {
       throw new ConflictException(`Cliente com ID ${cliente.id} já existe.`);
     }
-  
-    cliente.id = this.clientes.length > 0 ? this.clientes[this.clientes.length - 1].id + 1 : 1;
+
+    cliente.id =
+      this.clientes.length > 0
+        ? this.clientes[this.clientes.length - 1].id + 1
+        : 1;
     this.clientes.push(cliente);
     return cliente;
   }
 
   buscarCliente(id: number): InterfacePessoa | undefined {
-    const cliente = this.clientes.find(cliente => cliente.id === id);
+    const cliente = this.clientes.find((cliente) => cliente.id === id);
     if (cliente) {
-      console.log(`Cliente encontrado: ${cliente.nome}`); 
+      console.log(`Cliente encontrado: ${cliente.nome}`);
     } else {
       console.log(`Cliente não encontrado.`);
     }
@@ -42,8 +45,11 @@ export class ClienteService {
     return this.clientes;
   }
 
-  atualizarCliente(id: number, clienteAtualizado: Partial<InterfacePessoa>): InterfacePessoa | undefined {
-    const cliente = this.clientes.find(c => c.id === id);
+  atualizarCliente(
+    id: number,
+    clienteAtualizado: Partial<InterfacePessoa>,
+  ): InterfacePessoa | undefined {
+    const cliente = this.clientes.find((c) => c.id === id);
     if (cliente) {
       Object.assign(cliente, clienteAtualizado);
       return cliente;
@@ -53,21 +59,23 @@ export class ClienteService {
 
   deletarCliente(id: number): { message: string } {
     console.log('Deletando cliente com id:', id);
-    const cliente = this.clientes.find(g => g.id === id);
+    const cliente = this.clientes.find((g) => g.id === id);
     if (!cliente) {
       console.log('Cliente não encontrado.');
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
-    this.clientes = this.clientes.filter(g => g.id !== id);
+    this.clientes = this.clientes.filter((g) => g.id !== id);
     console.log('Cliente deletado com sucesso.');
     return { message: `Cliente com ID ${id} removido com sucesso.` };
   }
 
   associarConta(clienteId: number, contaId: number): boolean {
-    const cliente = this.clientes.find(c => c.id === clienteId);
+    const cliente = this.clientes.find((c) => c.id === clienteId);
     const conta = this.contaService.obterConta(contaId);
     if (!cliente) {
-      throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
+      throw new NotFoundException(
+        `Cliente com ID ${clienteId} não encontrado.`,
+      );
     }
     if (!conta) {
       throw new NotFoundException(`Conta com ID ${contaId} não encontrada.`);
@@ -82,11 +90,15 @@ export class ClienteService {
   async consultarCep(clienteId: number): Promise<any> {
     const cliente = this.buscarCliente(clienteId);
     if (!cliente) {
-      throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
+      throw new NotFoundException(
+        `Cliente com ID ${clienteId} não encontrado.`,
+      );
     }
-    
+
     if (!cliente.cep) {
-      throw new BadRequestException(`Cliente com ID ${clienteId} não possui CEP.`);
+      throw new BadRequestException(
+        `Cliente com ID ${clienteId} não possui CEP.`,
+      );
     }
 
     const endereco = await this.viaCepService.consultarCep(cliente.cep);
