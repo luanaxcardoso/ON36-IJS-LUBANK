@@ -49,6 +49,6 @@ export class CreateClienteDto implements InterfacePessoa {
   @IsBoolean({ message: 'O status ativo deve ser verdadeiro ou falso.' })
   statusAtivo: boolean;
 
-  @IsArray({ message: 'Contas deve ser uma lista de contas.' })
+  @IsArray({ message: 'Deve ser uma lista de contas.' })
   conta: Conta[];
 }

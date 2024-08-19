@@ -9,10 +9,11 @@ import { CreateClienteDto } from '../dto/cliente/create-cliente.dto';
 import { ContaService } from '../services/conta.service';
 import { ViaCepService } from '../services/viacep.service';
 import { UpdateClienteDto } from '../dto/cliente/update-cliente.dto';
-import { Cliente } from 'src/domain/models/cliente.model';
+
 
 @Injectable()
 export class ClienteService {
+  
   private clientes: CreateClienteDto[] = [];
 
   constructor(
