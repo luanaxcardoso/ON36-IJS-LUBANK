@@ -4,8 +4,8 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/app.module';
 import { GerenteService } from '../../src/application/services/gerente.service';
 import { CreateGerenteDto } from '../../src/application/dto/gerente/create-gerente.dto';
+import { UpdateGerenteDto } from '../../src/application/dto/gerente/update-gerente.dto';
 import { Gerente } from '../../src/domain/models/gerente.model';
-
 
 const mockGerenteService = {
   criarGerente: jest.fn().mockImplementation((dto: CreateGerenteDto) => {
@@ -31,6 +31,12 @@ const mockGerenteService = {
       contas: [], 
     } as Gerente,
   ]),
+  atualizarGerente: jest.fn().mockImplementation((id: number, dto: UpdateGerenteDto) => {
+    return {
+      id,
+      ...dto,
+    } as Gerente;
+  }),
 };
 
 describe('GerenteController (e2e)', () => {
@@ -41,7 +47,7 @@ describe('GerenteController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideProvider(GerenteService)
-      .useValue(mockGerenteService) 
+      .useValue(mockGerenteService)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -81,10 +87,28 @@ describe('GerenteController (e2e)', () => {
       .expect('Content-Type', /json/);
 
     expect(response.body).toBeInstanceOf(Array);
-    expect(response.body).toHaveLength(1); 
+    expect(response.body).toHaveLength(1);
     expect(response.body[0]).toHaveProperty('id');
     expect(response.body[0]).toHaveProperty('nome');
     expect(response.body[0].nome).toBe('Bernadete Alves');
+  });
+
+  it('/gerente/atualizar/:id (PATCH)', async () => {
+    const gerenteId = 1;
+    const updateGerenteDto: UpdateGerenteDto = {
+      nome: 'Bernadete Silva',
+      email: 'bernadete.silva@gmail.com',
+    };
+
+    const response = await supertest(app.getHttpServer())
+      .patch(`/gerente/atualizar/${gerenteId}`)
+      .send(updateGerenteDto)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(response.body).toHaveProperty('id', gerenteId);
+    expect(response.body.nome).toBe(updateGerenteDto.nome);
+    expect(response.body.email).toBe(updateGerenteDto.email);
   });
 
   afterAll(async () => {
