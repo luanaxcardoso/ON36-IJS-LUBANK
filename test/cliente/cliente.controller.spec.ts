@@ -56,7 +56,7 @@ describe('ClienteController (e2e)', () => {
     console.log('Resposta do GET:', response.body);
 
     expect(response.body).toHaveProperty('id', clienteId);
-    expect(response.body.nome).toBe('Luana Cardoso'); // Ajuste conforme o valor real retornado
+    expect(response.body.nome).toBe('Luana Cardoso'); 
   });
 
   it('/cliente/deletar/:id (DELETE)', async () => {
