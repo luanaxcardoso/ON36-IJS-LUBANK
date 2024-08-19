@@ -1,98 +1,131 @@
-import * as supertest from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../../src/app.module';
+import * as request from 'supertest';
+import { ContaController } from '../../src/adapters/controllers/conta.controller';
+import { ContaService } from '../../src/application/services/conta.service';
 import { TipoConta } from '../../src/domain/enums/tiposconta.enum';
+import { Conta } from '../../src/domain/models/contas/conta.model';
 
 describe('ContaController (e2e)', () => {
   let app: INestApplication;
-  let contaId: number;
-  let clienteId: number;
+  let mockContaService: Partial<ContaService>;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    mockContaService = {
+      criarConta: jest.fn(),
+      obterConta: jest.fn(),
+      obterContas: jest.fn(),
+      atualizarConta: jest.fn(),
+      removerConta: jest.fn(),
+      removerContasPorCliente: jest.fn(),
+    };
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      controllers: [ContaController],
+      providers: [
+        { provide: ContaService, useValue: mockContaService },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    const clienteResponse = await supertest(app.getHttpServer())
-      .post('/cliente/adicionar')
-      .send({
-        nome: 'Luana Cardoso',
-        dataNascimento: '1986-08-12',
-        email: 'luana@gmail.com',
-        telefone: '12 99856-1234',
-        endereco: 'Rua Machado de Assis, 123, Apto 45',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '12246001',
-        cpf: '365.968.456-00',
-        rendaSalarial: 3000,
-        statusAtivo: true,
-        conta: [],
-      })
-      .expect(201)
-      .expect('Content-Type', /json/);
-
-    clienteId = clienteResponse.body.id;
   });
 
-  it('/conta/criar (POST)', async () => {
-    const response = await supertest(app.getHttpServer())
+  it('/conta/criar (POST) deve criar uma conta com sucesso', async () => {
+    const contaMock: Conta = { id: 1, saldo: 1000, clienteId: 1, tipo: TipoConta.CONTA_CORRENTE } as any;
+    mockContaService.criarConta = jest.fn().mockResolvedValue(contaMock);
+
+    return request(app.getHttpServer())
       .post('/conta/criar')
       .send({
         tipo: TipoConta.CONTA_CORRENTE,
         id: 1,
         saldo: 1000,
-        clienteId: clienteId,
+        clienteId: 1,
         chequeEspecial: 500,
+        rendimentoMensal: 2.5,
       })
       .expect(201)
-      .expect('Content-Type', /json/);
-
-    expect(response.body).toHaveProperty('id');
-    contaId = response.body.id;
-    expect(response.body.saldo).toBe(1000);
+      .expect(contaMock);
   });
 
-  it('/conta/:id (GET)', async () => {
-    const response = await supertest(app.getHttpServer())
-      .get(`/conta/${contaId}`)
+  it('/conta/:id (GET) deve retornar uma conta existente', async () => {
+    const contaMock: Conta = { id: 1, saldo: 1000, clienteId: 1, tipo: TipoConta.CONTA_CORRENTE } as any;
+    mockContaService.obterConta = jest.fn().mockResolvedValue(contaMock);
+
+    return request(app.getHttpServer())
+      .get('/conta/1')
       .expect(200)
-      .expect('Content-Type', /json/);
-
-    console.log('Resposta do GET:', response.body);
-
-    expect(response.body).toHaveProperty('id', contaId);
-    expect(response.body.saldo).toBe(1000);
+      .expect(contaMock);
   });
 
-  it('/conta/atualizar/:id (PATCH)', async () => {
-    await supertest(app.getHttpServer())
-      .patch(`/conta/atualizar/${contaId}`)
-      .send({ tipo: TipoConta.CONTA_POUPANCA })
-      .expect(200)
-      .expect('Content-Type', /json/);
+  it('/conta/:id (GET) deve lançar NotFoundException se a conta não for encontrada', async () => {
+    mockContaService.obterConta = jest.fn().mockResolvedValue(null);
 
-    const updatedResponse = await supertest(app.getHttpServer())
-      .get(`/conta/${contaId}`)
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    expect(updatedResponse.body).toHaveProperty('id', contaId);
-    expect(updatedResponse.body.tipo).toBe(TipoConta.CONTA_POUPANCA);
+    return request(app.getHttpServer())
+      .get('/conta/1')
+      .expect(404)
+      .expect({
+        statusCode: 404,
+        message: 'Conta com ID 1 não encontrada.',
+        error: 'Not Found',
+      });
   });
 
-  it('/conta/remover/:id (DELETE)', async () => {
-    await supertest(app.getHttpServer())
-      .delete(`/conta/remover/${contaId}`)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .expect({ message: `Conta removida com sucesso.` });
+  it('/conta (GET) deve retornar todas as contas', async () => {
+    const contasMock: Conta[] = [
+      { id: 1, saldo: 1000, clienteId: 1, tipo: TipoConta.CONTA_CORRENTE } as any,
+      { id: 2, saldo: 2000, clienteId: 2, tipo: TipoConta.CONTA_POUPANCA } as any,
+    ];
+    mockContaService.obterContas = jest.fn().mockResolvedValue(contasMock);
 
-    await supertest(app.getHttpServer()).get(`/conta/${contaId}`).expect(404);
+    return request(app.getHttpServer())
+      .get('/conta')
+      .expect(200)
+      .expect(contasMock);
+  });
+
+  it('/conta/atualizar/:id (PATCH) deve atualizar uma conta com sucesso', async () => {
+    const contaMock: Conta = { id: 1, saldo: 1000, clienteId: 1, tipo: TipoConta.CONTA_CORRENTE } as any;
+    mockContaService.atualizarConta = jest.fn().mockResolvedValue(contaMock);
+
+    return request(app.getHttpServer())
+      .patch('/conta/atualizar/1')
+      .send({ tipo: TipoConta.CONTA_CORRENTE })
+      .expect(200)
+      .expect(contaMock);
+  });
+
+  it('/conta/atualizar/:id (PATCH) deve lançar NotFoundException ao atualizar uma conta não existente', async () => {
+    mockContaService.atualizarConta = jest.fn().mockResolvedValue(null);
+
+    return request(app.getHttpServer())
+      .patch('/conta/atualizar/1')
+      .send({ tipo: TipoConta.CONTA_CORRENTE })
+      .expect(404)
+      .expect({
+        statusCode: 404,
+        message: 'Conta com ID 1 não encontrada.',
+        error: 'Not Found',
+      });
+  });
+
+  it('/conta/remover/:id (DELETE) deve remover uma conta com sucesso', async () => {
+    mockContaService.removerConta = jest.fn().mockResolvedValue(undefined);
+
+    return request(app.getHttpServer())
+      .delete('/conta/remover/1')
+      .expect(200)
+      .expect({ message: 'Conta com ID 1 removida com sucesso.' });
+  });
+
+  it('/conta/removerporcliente/:clienteId (DELETE) deve remover contas por cliente com sucesso', async () => {
+    mockContaService.removerContasPorCliente = jest.fn().mockResolvedValue(undefined);
+
+    return request(app.getHttpServer())
+      .delete('/conta/removerporcliente/1')
+      .expect(200)
+      .expect({ message: 'Contas associadas ao cliente com ID 1 removidas com sucesso.' });
   });
 
   afterAll(async () => {

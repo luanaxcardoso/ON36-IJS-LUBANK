@@ -1,7 +1,7 @@
 import { Conta } from '../../domain/models/contas/conta.model';
 
 export interface InterfacePessoa {
-  id: number;
+  id?: number;
   nome: string;
   dataNascimento: string;
   email: string;

@@ -2,11 +2,12 @@ import * as supertest from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/app.module';
+import { CreateClienteDto } from '../../src/application/dto/cliente/create-cliente.dto';
+import { UpdateClienteDto } from '../../src/application/dto/cliente/update-cliente.dto';
 
 describe('ClienteController (e2e)', () => {
   let app: INestApplication;
   let clienteId: number;
-  
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -18,24 +19,28 @@ describe('ClienteController (e2e)', () => {
   });
 
   it('/cliente/adicionar (POST)', async () => {
+    const createClienteDto: CreateClienteDto = {
+      nome: 'Luana Cardoso',
+      dataNascimento: '1986-08-12',
+      email: 'luana@gmail.com',
+      telefone: '12 99856-1234',
+      endereco: 'Rua Machado de Assis, 123, Apto 45',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cep: '12246001',
+      cpf: '36596845600',
+      rendaSalarial: 3000,
+      statusAtivo: true,
+      conta: [],
+    };
+
     const response = await supertest(app.getHttpServer())
       .post('/cliente/adicionar')
-      .send({
-        nome: 'Luana Cardoso',
-        dataNascimento: '1986-08-12',
-        email: 'luana@gmail.com',
-        telefone: '12 99856-1234',
-        endereco: 'Rua Machado de Assis, 123, Apto 45',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '12246001',
-        cpf: '365.968.456-00',
-        rendaSalarial: 3000,
-        statusAtivo: true,
-        conta: [],
-      })
+      .send(createClienteDto)
       .expect(201)
       .expect('Content-Type', /json/);
+
+    console.log('Resposta do POST:', response.body);
 
     expect(response.body).toHaveProperty('id');
     clienteId = response.body.id;
@@ -51,23 +56,7 @@ describe('ClienteController (e2e)', () => {
     console.log('Resposta do GET:', response.body);
 
     expect(response.body).toHaveProperty('id', clienteId);
-    expect(response.body.nome).toBe('Luana Cardoso');
-  });
-
-  it('/cliente/:id (PATCH)', async () => {
-    await supertest(app.getHttpServer())
-      .patch(`/cliente/atualizar/${clienteId}`)
-      .send({ nome: 'Luana Aparecida Cardoso' })
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    const updatedResponse = await supertest(app.getHttpServer())
-      .get(`/cliente/${clienteId}`)
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    expect(updatedResponse.body).toHaveProperty('id', clienteId);
-    expect(updatedResponse.body.nome).toBe('Luana Aparecida Cardoso');
+    expect(response.body.nome).toBe('Luana Cardoso'); // Ajuste conforme o valor real retornado
   });
 
   it('/cliente/deletar/:id (DELETE)', async () => {

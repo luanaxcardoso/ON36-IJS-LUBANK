@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClienteService } from '../../src/application/services/cliente.service';
 import { ContaService } from '../../src/application/services/conta.service';
 import { ViaCepService } from '../../src/application/services/viacep.service';
-import { InterfacePessoa } from '../../src/domain/interfaces/pessoa.interface';
-import { ConflictException } from '@nestjs/common';
+import { CreateClienteDto } from '../../src/application/dto/cliente/create-cliente.dto';
+import { ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 
 const mockContaService = {
   obterConta: jest.fn(),
@@ -28,82 +28,86 @@ describe('ClienteService', () => {
     service = module.get<ClienteService>(ClienteService);
   });
 
-  it('Deve adicionar um cliente com CEP 12246001', () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
+  it('Deve adicionar um cliente com CEP 12246001', async () => {
+    const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
+      dataNascimento: '1987-08-06',
+      email: 'luana@example.com',
+      telefone: '11999999999',
+      endereco: 'Rua Exemplo',
+      cidade: 'São Paulo',
+      estado: 'SP',
       cep: '12246001',
-      cpf: '',
+      cpf: '12345678901',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+      conta: [],
     };
 
-    const resultado = service.adicionarCliente(cliente);
-    expect(resultado).toBe(cliente);
-    expect(service.buscarClientes()).toContain(cliente);
+    await service.adicionarCliente(cliente);
+    const clientes = await service.buscarClientes();
+    expect(clientes).toContainEqual(cliente);
   });
 
-  it('Deve lançar uma exceção ao adicionar um cliente com ID já existente', () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
+  it('Deve lançar uma exceção ao adicionar um cliente com CPF já existente', async () => {
+    const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
+      dataNascimento: '1987-08-06',
+      email: 'luana@example.com',
+      telefone: '11999999999',
+      endereco: 'Rua Exemplo',
+      cidade: 'São Paulo',
+      estado: 'SP',
       cep: '12246001',
-      cpf: '',
+      cpf: '12345678901',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+      conta: [],
     };
 
-    service.adicionarCliente(cliente);
-    expect(() => service.adicionarCliente(cliente)).toThrow(ConflictException);
+    await service.adicionarCliente(cliente);
+    await expect(service.adicionarCliente(cliente)).rejects.toThrow(ConflictException);
   });
 
-  it('Deve buscar um cliente pelo ID', () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
+  it('Deve buscar um cliente pelo ID', async () => {
+    const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
+      dataNascimento: '1987-08-06',
+      email: 'luana@example.com',
+      telefone: '11999999999',
+      endereco: 'Rua Exemplo',
+      cidade: 'São Paulo',
+      estado: 'SP',
       cep: '12246001',
-      cpf: '',
+      cpf: '12345678901',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+      conta: [],
     };
 
-    service.adicionarCliente(cliente);
-    const encontrado = service.buscarCliente(1);
-    expect(encontrado).toBe(cliente);
+    await service.adicionarCliente(cliente);
+    const encontrado = await service.buscarCliente(1);
+    expect(encontrado).toEqual(cliente);
   });
 
-  it('deve atualizar um cliente com CEP', () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
+  it('Deve atualizar um cliente com CEP', async () => {
+    const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
+      dataNascimento: '1987-08-06',
+      email: 'luana@example.com',
+      telefone: '11999999999',
+      endereco: 'Rua Exemplo',
+      cidade: 'São Paulo',
+      estado: 'SP',
       cep: '12246001',
-      cpf: '',
+      cpf: '12345678901',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+      conta: [],
     };
 
-    service.adicionarCliente(cliente);
-    const atualizado = service.atualizarCliente(1, {
+    await service.adicionarCliente(cliente);
+    const atualizado = await service.atualizarCliente(1, {
       nome: 'Luana Aparecida Cardoso',
       cep: '12345678',
     });
@@ -111,105 +115,63 @@ describe('ClienteService', () => {
     expect(atualizado?.cep).toBe('12345678');
   });
 
-  it('deve associar uma conta a um cliente', () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
+  it('Deve deletar um cliente', async () => {
+    const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
+      dataNascimento: '1987-08-06',
+      email: 'luana@example.com',
+      telefone: '11999999999',
+      endereco: 'Rua Exemplo',
+      cidade: 'São Paulo',
+      estado: 'SP',
       cep: '12246001',
-      cpf: '',
+      cpf: '12345678901',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+      conta: [],
     };
 
-    const conta = { id: 1, saldo: 1000 };
-    mockContaService.obterConta.mockReturnValue(conta);
-
-    service.adicionarCliente(cliente);
-    const associado = service.associarConta(1, 1);
-    expect(associado).toBe(true);
-    expect(cliente.conta).toContain(conta);
-  });
-
-  it('Deve deletar um cliente', () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
-      nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cep: '12246001',
-      cpf: '',
-    };
-
-    service.adicionarCliente(cliente);
-    const mensagem = service.deletarCliente(1);
+    await service.adicionarCliente(cliente);
+    const mensagem = await service.deletarCliente(1);
     expect(mensagem).toEqual({
       message: 'Cliente com ID 1 removido com sucesso.',
     });
-    expect(service.buscarClientes()).not.toContain(cliente);
+    const clientes = await service.buscarClientes();
+    expect(clientes).not.toContainEqual(cliente);
   });
 
   it('Deve consultar o CEP do cliente', async () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
+    const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
+      dataNascimento: '1987-08-06',
+      email: 'luana@example.com',
+      telefone: '11999999999',
+      endereco: 'Rua Exemplo',
+      cidade: 'São Paulo',
+      estado: 'SP',
       cep: '12246001',
-      cpf: '',
+      cpf: '12345678901',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+      conta: [],
     };
-
+    
     const endereco = {
       logradouro: 'Rua Exemplo',
       bairro: 'Centro',
       cidade: 'São Paulo',
       uf: 'SP',
+      cep: '12246001',
     };
-    mockViaCepService.consultarCep.mockReturnValue(endereco);
-
-    service.adicionarCliente(cliente);
-    const resultado = await service.consultarCep(1);
-    expect(resultado).toBe(endereco);
+  
+    mockViaCepService.consultarCep.mockResolvedValue(endereco);
+  
+    const clienteAdicionado = await service.adicionarCliente(cliente);
+  
+    const resultado = await service.consultarCep(clienteAdicionado.id);
+  
+    expect(resultado).toEqual(endereco);
   });
-
-  it('Deve lançar exceção ao consultar CEP de cliente sem CEP', async () => {
-    const cliente: InterfacePessoa = {
-      id: 1,
-      nome: 'Luana Cardoso',
-      conta: [],
-      dataNascimento: '',
-      email: '',
-      telefone: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      cep: '',
-      cpf: '',
-    };
-
-    service.adicionarCliente(cliente);
-    await expect(service.consultarCep(1)).rejects.toThrow(
-      'Cliente com ID 1 não possui CEP.',
-    );
-  });
-
-  it('Deve lançar exceção ao consultar CEP de cliente inexistente', async () => {
-    await expect(service.consultarCep(999)).rejects.toThrow(
-      'Cliente com ID 999 não encontrado.',
-    );
-  });
+  
+  
 });

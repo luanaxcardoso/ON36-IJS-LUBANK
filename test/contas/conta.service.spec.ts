@@ -20,23 +20,21 @@ describe('ContaService', () => {
     service = module.get<ContaService>(ContaService);
   });
 
-  it('Deve criar uma conta corrente', () => {
+  it('Deve criar uma conta corrente', async () => {
     const id = 1;
     const saldo = 1000;
     const clienteId = 1;
     const chequeEspecial = 500;
 
     const contaMock = new ContaCorrente(id, saldo, clienteId, chequeEspecial);
-    (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(
-      contaMock,
-    );
+    (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(contaMock);
 
-    const conta = service.criarConta(
+    const conta = await service.criarConta(
       TipoConta.CONTA_CORRENTE,
       id,
       saldo,
       clienteId,
-      chequeEspecial,
+      chequeEspecial
     );
 
     expect(conta).toBeDefined();
@@ -47,24 +45,22 @@ describe('ContaService', () => {
     expect((conta as ContaCorrente).chequeEspecial).toBe(chequeEspecial);
   });
 
-  it('Deve criar uma conta poupança', () => {
+  it('Deve criar uma conta poupança', async () => {
     const id = 2;
     const saldo = 2000;
     const clienteId = 2;
     const rendimentoMensal = 1.5;
 
     const contaMock = new ContaPoupanca(id, saldo, clienteId, rendimentoMensal);
-    (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(
-      contaMock,
-    );
+    (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(contaMock);
 
-    const conta = service.criarConta(
+    const conta = await service.criarConta(
       TipoConta.CONTA_POUPANCA,
       id,
       saldo,
       clienteId,
       undefined,
-      rendimentoMensal,
+      rendimentoMensal
     );
 
     expect(conta).toBeDefined();
@@ -75,13 +71,13 @@ describe('ContaService', () => {
     expect((conta as ContaPoupanca).rendimentoMensal).toBe(rendimentoMensal);
   });
 
-  it('Deve lançar um erro ao tentar criar um tipo de conta não suportado', () => {
+  it('Deve lançar um erro ao tentar criar um tipo de conta não suportado', async () => {
     const id = 3;
     const saldo = 200;
     const clienteId = 3;
 
-    expect(() => {
-      service.criarConta('CONTA_INVALIDA' as TipoConta, id, saldo, clienteId);
-    }).toThrow('Tipo de conta não suportado: CONTA_INVALIDA');
+    await expect(service.criarConta('CONTA_INVALIDA' as TipoConta, id, saldo, clienteId))
+      .rejects
+      .toThrow('Tipo de conta não suportado: CONTA_INVALIDA');
   });
 });

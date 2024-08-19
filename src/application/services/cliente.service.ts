@@ -4,104 +4,129 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
+import { validate } from 'class-validator';
+import { CreateClienteDto } from '../dto/cliente/create-cliente.dto';
 import { ContaService } from '../services/conta.service';
 import { ViaCepService } from '../services/viacep.service';
+import { UpdateClienteDto } from '../dto/cliente/update-cliente.dto';
+import { Cliente } from 'src/domain/models/cliente.model';
 
 @Injectable()
 export class ClienteService {
-  private clientes: InterfacePessoa[] = [];
+  private clientes: CreateClienteDto[] = [];
 
   constructor(
     private readonly contaService: ContaService,
     private readonly viaCepService: ViaCepService,
   ) {}
 
-  adicionarCliente(cliente: InterfacePessoa): InterfacePessoa {
-    const clienteExistente = this.clientes.find((c) => c.id === cliente.id);
+  async adicionarCliente(
+    clienteDto: CreateClienteDto,
+  ): Promise<CreateClienteDto> {
+    const cliente = new CreateClienteDto();
+    Object.assign(cliente, clienteDto);
+
+    const erros = await validate(cliente);
+    if (erros.length > 0) {
+      throw new BadRequestException(
+        `Dados inválidos: ${JSON.stringify(erros)}`,
+      );
+    }
+
+    const clienteExistente = this.clientes.find(
+      (c) => c.cpf === clienteDto.cpf,
+    );
     if (clienteExistente) {
-      throw new ConflictException(`Cliente com ID ${cliente.id} já existe.`);
+      throw new ConflictException(
+        `Cliente com CPF ${clienteDto.cpf} já existe.`,
+      );
     }
 
-    cliente.id =
+    clienteDto['id'] =
       this.clientes.length > 0
-        ? this.clientes[this.clientes.length - 1].id + 1
+        ? this.clientes[this.clientes.length - 1]['id'] + 1
         : 1;
-    this.clientes.push(cliente);
-    return cliente;
+
+    this.clientes.push(clienteDto);
+    return clienteDto;
   }
 
-  buscarCliente(id: number): InterfacePessoa | undefined {
-    const cliente = this.clientes.find((cliente) => cliente.id === id);
-    if (cliente) {
-      console.log(`Cliente encontrado: ${cliente.nome}`);
-    } else {
-      console.log(`Cliente não encontrado.`);
+  buscarCliente(id: number): CreateClienteDto | undefined {
+    const cliente = this.clientes.find((cliente) => cliente['id'] === id);
+    if (!cliente) {
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
     return cliente;
   }
 
-  buscarClientes(): InterfacePessoa[] {
+  buscarClientes(): CreateClienteDto[] {
     return this.clientes;
   }
 
-  atualizarCliente(
+  async atualizarCliente(
     id: number,
-    clienteAtualizado: Partial<InterfacePessoa>,
-  ): InterfacePessoa | undefined {
-    const cliente = this.clientes.find((c) => c.id === id);
-    if (cliente) {
-      Object.assign(cliente, clienteAtualizado);
-      return cliente;
-    }
-    return undefined;
-  }
-
-  deletarCliente(id: number): { message: string } {
-    console.log('Deletando cliente com id:', id);
-    const cliente = this.clientes.find((g) => g.id === id);
+    clienteDto: UpdateClienteDto,
+  ): Promise<CreateClienteDto> {
+    const cliente = this.clientes.find((c) => c['id'] === id);
     if (!cliente) {
-      console.log('Cliente não encontrado.');
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
-    this.clientes = this.clientes.filter((g) => g.id !== id);
-    console.log('Cliente deletado com sucesso.');
+
+    const clienteAtualizado = { ...cliente, ...clienteDto };
+    const erros = await validate(clienteAtualizado);
+    if (erros.length > 0) {
+      throw new BadRequestException(
+        `Dados inválidos: ${JSON.stringify(erros)}`,
+      );
+    }
+
+    this.clientes = this.clientes.map((c) =>
+      c['id'] === id ? clienteAtualizado : c,
+    );
+    return clienteAtualizado;
+  }
+
+  
+  deletarCliente(id: number): { message: string } {
+    const cliente = this.clientes.find((g) => g['id'] === id);
+    if (!cliente) {
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
+    }
+
+    this.clientes = this.clientes.filter((g) => g['id'] !== id);
     return { message: `Cliente com ID ${id} removido com sucesso.` };
   }
 
-  associarConta(clienteId: number, contaId: number): boolean {
-    const cliente = this.clientes.find((c) => c.id === clienteId);
-    const conta = this.contaService.obterConta(contaId);
+  async associarConta(clienteId: number, contaId: number): Promise<boolean> {
+    const cliente = this.clientes.find((c) => c['id'] === clienteId);
+    const conta = await this.contaService.obterConta(contaId); // Assuma que obterConta é assíncrono
     if (!cliente) {
-      throw new NotFoundException(
-        `Cliente com ID ${clienteId} não encontrado.`,
-      );
+      throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
     }
     if (!conta) {
       throw new NotFoundException(`Conta com ID ${contaId} não encontrada.`);
-    }
-    if (!cliente.conta) {
-      cliente.conta = [];
     }
     cliente.conta.push(conta);
     return true;
   }
 
   async consultarCep(clienteId: number): Promise<any> {
-    const cliente = this.buscarCliente(clienteId);
+    const cliente = await this.buscarCliente(clienteId); 
     if (!cliente) {
-      throw new NotFoundException(
-        `Cliente com ID ${clienteId} não encontrado.`,
-      );
+      throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
     }
 
-    if (!cliente.cep) {
-      throw new BadRequestException(
-        `Cliente com ID ${clienteId} não possui CEP.`,
-      );
+    if (!cliente.cep || cliente.cep.trim() === '') {
+      throw new BadRequestException(`Cliente com ID ${clienteId} não possui um CEP válido.`);
     }
 
     const endereco = await this.viaCepService.consultarCep(cliente.cep);
+    
+    
+    if (!endereco || !endereco.cep || endereco.cep !== cliente.cep) {
+      throw new BadRequestException(`Não foi possível encontrar o endereço para o CEP ${cliente.cep}.`);
+    }
+    
     return endereco;
   }
 }

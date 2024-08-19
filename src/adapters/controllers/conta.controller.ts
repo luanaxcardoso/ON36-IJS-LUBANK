@@ -18,14 +18,14 @@ export class ContaController {
   constructor(private readonly contaService: ContaService) {}
 
   @Post('criar')
-  criarConta(
+  async criarConta(
     @Body('tipo') tipo: TipoConta,
     @Body('id', ParseIntPipe) id: number,
     @Body('saldo') saldo: number,
     @Body('clienteId', ParseIntPipe) clienteId: number,
     @Body('chequeEspecial') chequeEspecial?: number,
     @Body('rendimentoMensal') rendimentoMensal?: number,
-  ): Conta {
+  ): Promise<Conta> {
     return this.contaService.criarConta(
       tipo,
       id,
@@ -37,8 +37,8 @@ export class ContaController {
   }
 
   @Get(':id')
-  obterConta(@Param('id', ParseIntPipe) id: number): Conta | undefined {
-    const conta = this.contaService.obterConta(id);
+  async obterConta(@Param('id', ParseIntPipe) id: number): Promise<Conta> {
+    const conta = await this.contaService.obterConta(id);
     if (!conta) {
       throw new NotFoundException(`Conta com ID ${id} não encontrada.`);
     }
@@ -46,29 +46,33 @@ export class ContaController {
   }
 
   @Get()
-  obterContas(): Conta[] {
+  async obterContas(): Promise<Conta[]> {
     return this.contaService.obterContas();
   }
 
   @Patch('atualizar/:id')
-  atualizarConta(
+  async atualizarConta(
     @Param('id', ParseIntPipe) id: number,
     @Body('tipo') tipo: TipoConta,
-  ): Conta | undefined {
-    return this.contaService.atualizarConta(id, tipo);
+  ): Promise<Conta> {
+    const conta = await this.contaService.atualizarConta(id, tipo);
+    if (!conta) {
+      throw new NotFoundException(`Conta com ID ${id} não encontrada.`);
+    }
+    return conta;
   }
 
   @Delete('remover/:id')
-  removerConta(@Param('id', ParseIntPipe) id: number): { message: string } {
-    this.contaService.removerConta(id);
-    return { message: `Conta removida com sucesso.` };
+  async removerConta(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
+    await this.contaService.removerConta(id);
+    return { message: `Conta com ID ${id} removida com sucesso.` };
   }
 
   @Delete('removerporcliente/:clienteId')
-  removerContasPorCliente(
+  async removerContasPorCliente(
     @Param('clienteId', ParseIntPipe) clienteId: number,
-  ): { message: string } {
-    this.contaService.removerContasPorCliente(clienteId);
-    return { message: `Contas removidas com sucesso.` };
+  ): Promise<{ message: string }> {
+    await this.contaService.removerContasPorCliente(clienteId);
+    return { message: `Contas associadas ao cliente com ID ${clienteId} removidas com sucesso.` };
   }
 }

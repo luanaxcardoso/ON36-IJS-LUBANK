@@ -1,4 +1,3 @@
-// services/conta.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Conta } from '../../domain/models/contas/conta.model';
 import { TipoConta } from '../../domain/enums/tiposconta.enum';
@@ -9,14 +8,14 @@ import { ContaPoupancaFactory } from '../../domain/factories/contapoupanca.facto
 export class ContaService {
   private contas: Conta[] = [];
 
-  criarConta(
+  async criarConta(
     tipo: TipoConta,
     id: number,
     saldo: number,
     clienteId: number,
     chequeEspecial?: number,
     rendimentoMensal?: number,
-  ): Conta {
+  ): Promise<Conta> {
     let conta: Conta;
     switch (tipo) {
       case TipoConta.CONTA_CORRENTE:
@@ -43,15 +42,15 @@ export class ContaService {
     return conta;
   }
 
-  obterConta(id: number): Conta | undefined {
+  async obterConta(id: number): Promise<Conta | undefined> {
     return this.contas.find((conta) => conta.id === id);
   }
 
-  obterContas(): Conta[] {
+  async obterContas(): Promise<Conta[]> {
     return this.contas;
   }
 
-  atualizarConta(id: number, tipo: TipoConta): Conta | undefined {
+  async atualizarConta(id: number, tipo: TipoConta): Promise<Conta | undefined> {
     const conta = this.contas.find((c) => c.id === id);
     if (conta) {
       conta.tipo = tipo;
@@ -60,7 +59,7 @@ export class ContaService {
     return undefined;
   }
 
-  removerConta(id: number): void {
+  async removerConta(id: number): Promise<void> {
     const contaIndex = this.contas.findIndex((conta) => conta.id === id);
     if (contaIndex === -1) {
       throw new NotFoundException(`Conta com ID ${id} não encontrada.`);
@@ -68,7 +67,7 @@ export class ContaService {
     this.contas.splice(contaIndex, 1);
   }
 
-  removerContasPorCliente(idCliente: number): void {
+  async removerContasPorCliente(idCliente: number): Promise<void> {
     this.contas = this.contas.filter((conta) => conta.clienteId !== idCliente);
   }
 }

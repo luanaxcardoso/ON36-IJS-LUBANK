@@ -9,9 +9,12 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { ClienteService } from '../../application/services/cliente.service';
-import { Cliente } from '../../domain/models/cliente.model';
+import { CreateClienteDto } from '../../application/dto/cliente/create-cliente.dto';
+import { UpdateClienteDto } from '../../application/dto/cliente/update-cliente.dto';
 import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
 import { ViaCepService } from '../../application/services/viacep.service';
 
@@ -23,9 +26,21 @@ export class ClienteController {
   ) {}
 
   @Post('adicionar')
-  adicionarCliente(@Body() cliente: Cliente) {
-    const clienteAdicionado = this.clienteService.adicionarCliente(cliente);
-    return clienteAdicionado;
+  async adicionarCliente(@Body() clienteDto: CreateClienteDto) {
+    try {
+      const clienteAdicionado = await this.clienteService.adicionarCliente(
+        clienteDto,
+      );
+      return clienteAdicionado;
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof ConflictException
+      ) {
+        throw error;
+      }
+      throw new BadRequestException('Erro ao adicionar cliente.');
+    }
   }
 
   @Get(':id')
@@ -46,21 +61,21 @@ export class ClienteController {
   }
 
   @Patch('atualizar/:id')
-  atualizarCliente(
+  async atualizarCliente(
     @Param('id', ParseIntPipe) id: number,
-    @Body() atualizarCliente: Partial<Cliente>,
+    @Body() atualizarCliente: UpdateClienteDto,
   ) {
     return this.clienteService.atualizarCliente(id, atualizarCliente);
   }
 
   @Delete('deletar/:id')
-  deletarCliente(@Param('id', ParseIntPipe) id: number): { message: string } {
+  async deletarCliente(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
     console.log('Recebendo pedido para deletar cliente com id:', id);
     return this.clienteService.deletarCliente(id);
   }
 
   @Post('associarconta')
-  associarConta(@Body() body: { clienteId: number; contaId: number }) {
+  async associarConta(@Body() body: { clienteId: number; contaId: number }) {
     return this.clienteService.associarConta(body.clienteId, body.contaId);
   }
 
