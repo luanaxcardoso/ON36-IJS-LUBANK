@@ -37,6 +37,9 @@ const mockGerenteService = {
       ...dto,
     } as Gerente;
   }),
+  deletarGerente: jest.fn().mockImplementation((id: number) => {
+    return { message: `Gerente com ID ${id} foi deletado` };
+  }),
 };
 
 describe('GerenteController (e2e)', () => {
@@ -109,6 +112,17 @@ describe('GerenteController (e2e)', () => {
     expect(response.body).toHaveProperty('id', gerenteId);
     expect(response.body.nome).toBe(updateGerenteDto.nome);
     expect(response.body.email).toBe(updateGerenteDto.email);
+  });
+
+  it('/gerente/deletar/:id (DELETE)', async () => {
+    const gerenteId = 1;
+
+    const response = await supertest(app.getHttpServer())
+      .delete(`/gerente/deletar/${gerenteId}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    expect(response.body).toHaveProperty('message', `Gerente com ID ${gerenteId} foi deletado`);
   });
 
   afterAll(async () => {
