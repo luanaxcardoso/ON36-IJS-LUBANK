@@ -15,4 +15,5 @@ export class ViaCepService {
       throw new BadRequestException('Erro ao consultar o CEP');
     }
   }
+  
 }

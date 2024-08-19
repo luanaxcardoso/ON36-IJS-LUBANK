@@ -27,6 +27,7 @@ describe('GerenteController (e2e) - Associar Cliente', () => {
         endereco: 'Rua das Flores, 123',
         cidade: 'São Paulo',
         estado: 'SP',
+        cep: '12246001',
         cpf: '123.456.789-00',
         statusAtivo: true,
         contas: [],

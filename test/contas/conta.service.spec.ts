@@ -6,8 +6,8 @@ import { ContaCorrente } from '../../src/domain/models/contas/contacorrente.mode
 import { ContaPoupanca } from '../../src/domain/models/contas/contapoupanca.model';
 import { ContaService } from '../../src/application/services/conta.service';
 
-jest.mock('../../src/factories/contacorrente.factory');
-jest.mock('../../src/factories/contapoupanca.factory');
+jest.mock('../../src/domain/factories/contacorrente.factory');
+jest.mock('../../src/domain/factories/contapoupanca.factory');
 
 describe('ContaService', () => {
   let service: ContaService;
