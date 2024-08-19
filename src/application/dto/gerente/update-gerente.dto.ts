@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, IsBoolean, IsArray, Min, Length } from 'class-validator';
+import { IsOptional, IsString, IsNumber, IsBoolean, IsArray, Min, Length, ArrayNotEmpty } from 'class-validator';
 import { Conta } from '../../../domain/models/contas/conta.model';
 
 export class UpdateGerenteDto {
@@ -49,7 +49,8 @@ export class UpdateGerenteDto {
   statusAtivo?: boolean;
 
   @IsOptional()
-  @IsArray({ message: 'Contas deve ser uma lista de contas.' })
-  conta?: Conta[];
+  @IsArray()
+  @ArrayNotEmpty()
+  contas?: Conta[];
 }
 

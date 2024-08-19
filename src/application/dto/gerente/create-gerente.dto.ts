@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail, IsNumber, IsString, IsMobilePhone, Length, IsBoolean, Min, IsArray, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsNumber, IsString, IsMobilePhone, Length, IsBoolean, Min, IsArray, IsOptional, ArrayNotEmpty } from 'class-validator';
 import { Conta } from '../../../domain/models/contas/conta.model';
 import { InterfacePessoa } from '../../../domain/interfaces/pessoa.interface';
 
@@ -44,6 +44,8 @@ export class CreateGerenteDto implements InterfacePessoa {
     @IsBoolean({ message: 'O status ativo deve ser verdadeiro ou falso.' })
     statusAtivo: boolean;
 
-    @IsArray({ message: 'Deve ser uma lista de contas.' })
-    conta: Conta[];
+    @IsOptional()
+    @IsArray()
+    @ArrayNotEmpty()
+    contas?: Conta[];
 }
