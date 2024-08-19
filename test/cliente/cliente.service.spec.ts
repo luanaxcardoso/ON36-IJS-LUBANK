@@ -32,9 +32,9 @@ describe('ClienteService', () => {
     const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999979',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -49,13 +49,13 @@ describe('ClienteService', () => {
     expect(clientes).toContainEqual(cliente);
   });
 
-  it('Deve lançar uma exceção ao adicionar um cliente com CPF já existente', async () => {
+  it('Deve lançar uma exceção ao adicionar um CPF já existente', async () => {
     const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999979',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -73,9 +73,9 @@ describe('ClienteService', () => {
     const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999997',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -94,9 +94,9 @@ describe('ClienteService', () => {
     const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999979',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -119,9 +119,9 @@ describe('ClienteService', () => {
     const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999979',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -144,9 +144,9 @@ describe('ClienteService', () => {
     const cliente: CreateClienteDto = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999979',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -157,7 +157,7 @@ describe('ClienteService', () => {
     };
     
     const endereco = {
-      logradouro: 'Rua Exemplo',
+      logradouro: 'Rua das Flores, 123',
       bairro: 'Centro',
       cidade: 'São Paulo',
       uf: 'SP',
