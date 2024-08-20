@@ -112,22 +112,26 @@ export class ClienteService {
   }
 
   async consultarCep(clienteId: number): Promise<any> {
-    const cliente = await this.buscarCliente(clienteId); 
+    
+    const cliente = this.buscarCliente(clienteId); 
     if (!cliente) {
       throw new NotFoundException(`Cliente com ID ${clienteId} não encontrado.`);
     }
-
+  
+    
     if (!cliente.cep || cliente.cep.trim() === '') {
       throw new BadRequestException(`Cliente com ID ${clienteId} não possui um CEP válido.`);
     }
-
+  
+    
     const endereco = await this.viaCepService.consultarCep(cliente.cep);
-    
-    
+  
+   
     if (!endereco || !endereco.cep || endereco.cep !== cliente.cep) {
       throw new BadRequestException(`Não foi possível encontrar o endereço para o CEP ${cliente.cep}.`);
     }
-    
+  
     return endereco;
   }
+  
 }
