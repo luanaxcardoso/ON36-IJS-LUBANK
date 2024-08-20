@@ -5,6 +5,9 @@ import { ContaPoupancaFactory } from '../../src/domain/factories/contapoupanca.f
 import { ContaCorrente } from '../../src/domain/models/contas/contacorrente.model';
 import { ContaPoupanca } from '../../src/domain/models/contas/contapoupanca.model';
 import { ContaService } from '../../src/application/services/conta.service';
+import { CreateContaDto } from '../../src/application/dto/conta/create-conta.dto';
+import { CreateContaCorrenteDto } from '../../src/application/dto/conta/contacorrente/create-conta-corrente.dto';
+import { CreateContaPoupancaDto } from '../../src/application/dto/conta/contapoupanca/create-poupanca.dto';
 
 jest.mock('../../src/domain/factories/contacorrente.factory');
 jest.mock('../../src/domain/factories/contapoupanca.factory');
@@ -21,62 +24,68 @@ describe('ContaService', () => {
   });
 
   it('Deve criar uma conta corrente', async () => {
-    const id = 1;
-    const saldo = 1000;
-    const clienteId = 1;
-    const chequeEspecial = 500;
+    const createContaDto: CreateContaCorrenteDto = {
+      tipo: TipoConta.CONTA_CORRENTE,
+      id: 1,
+      saldo: 1000,
+      clienteId: 1,
+      chequeEspecial: 500,
+    };
 
-    const contaMock = new ContaCorrente(id, saldo, clienteId, chequeEspecial);
+    const contaMock = new ContaCorrente(
+      createContaDto.id,
+      createContaDto.saldo,
+      createContaDto.clienteId,
+      createContaDto.chequeEspecial
+    );
     (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(contaMock);
 
-    const conta = await service.criarConta(
-      TipoConta.CONTA_CORRENTE,
-      id,
-      saldo,
-      clienteId,
-      chequeEspecial
-    );
+    const conta = await service.criarConta(createContaDto);
 
     expect(conta).toBeDefined();
-    expect(conta.id).toBe(id);
-    expect(conta.saldo).toBe(saldo);
-    expect(conta.clienteId).toBe(clienteId);
+    expect(conta.id).toBe(createContaDto.id);
+    expect(conta.saldo).toBe(createContaDto.saldo);
+    expect(conta.clienteId).toBe(createContaDto.clienteId);
     expect(conta.tipo).toBe(TipoConta.CONTA_CORRENTE);
-    expect((conta as ContaCorrente).chequeEspecial).toBe(chequeEspecial);
+    expect((conta as ContaCorrente).chequeEspecial).toBe(createContaDto.chequeEspecial);
   });
 
   it('Deve criar uma conta poupança', async () => {
-    const id = 2;
-    const saldo = 2000;
-    const clienteId = 2;
-    const rendimentoMensal = 1.5;
+    const createContaDto: CreateContaPoupancaDto = {
+      tipo: TipoConta.CONTA_POUPANCA,
+      id: 2,
+      saldo: 2000,
+      clienteId: 2,
+      rendimentoMensal: 1.5,
+    };
 
-    const contaMock = new ContaPoupanca(id, saldo, clienteId, rendimentoMensal);
+    const contaMock = new ContaPoupanca(
+      createContaDto.id,
+      createContaDto.saldo,
+      createContaDto.clienteId,
+      createContaDto.rendimentoMensal
+    );
     (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(contaMock);
 
-    const conta = await service.criarConta(
-      TipoConta.CONTA_POUPANCA,
-      id,
-      saldo,
-      clienteId,
-      undefined,
-      rendimentoMensal
-    );
+    const conta = await service.criarConta(createContaDto);
 
     expect(conta).toBeDefined();
-    expect(conta.id).toBe(id);
-    expect(conta.saldo).toBe(saldo);
-    expect(conta.clienteId).toBe(clienteId);
+    expect(conta.id).toBe(createContaDto.id);
+    expect(conta.saldo).toBe(createContaDto.saldo);
+    expect(conta.clienteId).toBe(createContaDto.clienteId);
     expect(conta.tipo).toBe(TipoConta.CONTA_POUPANCA);
-    expect((conta as ContaPoupanca).rendimentoMensal).toBe(rendimentoMensal);
+    expect((conta as ContaPoupanca).rendimentoMensal).toBe(createContaDto.rendimentoMensal);
   });
 
   it('Deve lançar um erro ao tentar criar um tipo de conta não suportado', async () => {
-    const id = 3;
-    const saldo = 200;
-    const clienteId = 3;
+    const createContaDto: CreateContaDto = {
+      tipo: 'CONTA_INVALIDA' as TipoConta,
+      id: 3,
+      saldo: 200,
+      clienteId: 3,
+    };
 
-    await expect(service.criarConta('CONTA_INVALIDA' as TipoConta, id, saldo, clienteId))
+    await expect(service.criarConta(createContaDto))
       .rejects
       .toThrow('Tipo de conta não suportado: CONTA_INVALIDA');
   });
