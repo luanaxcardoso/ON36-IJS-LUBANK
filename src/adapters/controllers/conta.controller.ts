@@ -10,7 +10,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ContaService } from '../../application/services/conta.service';
-import { TipoConta } from '../../domain/enums/tiposconta.enum';
+import { CreateContaDto } from '../../application/dto/conta/create-conta.dto';
+import { UpdateContaDto } from '../../application/dto/conta/update-conta.dto';
 import { Conta } from '../../domain/models/contas/conta.model';
 
 @Controller('conta')
@@ -19,21 +20,9 @@ export class ContaController {
 
   @Post('criar')
   async criarConta(
-    @Body('tipo') tipo: TipoConta,
-    @Body('id', ParseIntPipe) id: number,
-    @Body('saldo') saldo: number,
-    @Body('clienteId', ParseIntPipe) clienteId: number,
-    @Body('chequeEspecial') chequeEspecial?: number,
-    @Body('rendimentoMensal') rendimentoMensal?: number,
+    @Body() createContaDto: CreateContaDto,
   ): Promise<Conta> {
-    return this.contaService.criarConta(
-      tipo,
-      id,
-      saldo,
-      clienteId,
-      chequeEspecial,
-      rendimentoMensal,
-    );
+    return this.contaService.criarConta(createContaDto);
   }
 
   @Get(':id')
@@ -53,9 +42,9 @@ export class ContaController {
   @Patch('atualizar/:id')
   async atualizarConta(
     @Param('id', ParseIntPipe) id: number,
-    @Body('tipo') tipo: TipoConta,
+    @Body() updateContaDto: UpdateContaDto,
   ): Promise<Conta> {
-    const conta = await this.contaService.atualizarConta(id, tipo);
+    const conta = await this.contaService.atualizarConta(id, updateContaDto);
     if (!conta) {
       throw new NotFoundException(`Conta com ID ${id} não encontrada.`);
     }

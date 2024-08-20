@@ -3,39 +3,34 @@ import { Conta } from '../../domain/models/contas/conta.model';
 import { TipoConta } from '../../domain/enums/tiposconta.enum';
 import { ContaCorrenteFactory } from '../../domain/factories/contacorrente.factory';
 import { ContaPoupancaFactory } from '../../domain/factories/contapoupanca.factory';
+import { CreateContaDto } from '../dto/conta/create-conta.dto';
+import { UpdateContaDto } from '../dto/conta/update-conta.dto';
+import { CreateContaCorrenteDto } from '../dto/conta/contacorrente/create-conta-corrente.dto';
+import { CreateContaPoupancaDto } from '../dto/conta/contapoupanca/create-poupanca.dto';
+import { UpdateContaCorrenteDto } from '../dto/conta/contacorrente/update-conta-corrente.dto';
+import { UpdateContaPoupancaDto } from '../dto/conta/contapoupanca/update-poupanca.dto';
+import { ContaCorrente } from '../../domain/models/contas/contacorrente.model';
+import { ContaPoupanca } from '../../domain/models/contas/contapoupanca.model';
 
 @Injectable()
 export class ContaService {
   private contas: Conta[] = [];
 
-  async criarConta(
-    tipo: TipoConta,
-    id: number,
-    saldo: number,
-    clienteId: number,
-    chequeEspecial?: number,
-    rendimentoMensal?: number,
-  ): Promise<Conta> {
+  async criarConta(contaDto: CreateContaDto): Promise<Conta> {
     let conta: Conta;
-    switch (tipo) {
+    switch (contaDto.tipo) {
       case TipoConta.CONTA_CORRENTE:
         conta = ContaCorrenteFactory.criarContaCorrente(
-          id,
-          saldo,
-          clienteId,
-          chequeEspecial || 0,
+          contaDto as unknown as CreateContaCorrenteDto
         );
         break;
       case TipoConta.CONTA_POUPANCA:
         conta = ContaPoupancaFactory.criarContaPoupanca(
-          id,
-          saldo,
-          clienteId,
-          rendimentoMensal || 0,
+          contaDto as unknown as CreateContaPoupancaDto
         );
         break;
       default:
-        throw new Error(`Tipo de conta não suportado: ${tipo}`);
+        throw new Error(`Tipo de conta não suportado: ${contaDto.tipo}`);
     }
     this.contas.push(conta);
     console.log('Conta criada:', conta);
@@ -50,10 +45,23 @@ export class ContaService {
     return this.contas;
   }
 
-  async atualizarConta(id: number, tipo: TipoConta): Promise<Conta | undefined> {
+  async atualizarConta(id: number, updateContaDto: UpdateContaDto): Promise<Conta | undefined> {
     const conta = this.contas.find((c) => c.id === id);
     if (conta) {
-      conta.tipo = tipo;
+      if (updateContaDto.tipo) {
+        conta.tipo = updateContaDto.tipo;
+      }
+      if ('chequeEspecial' in updateContaDto) {
+       
+        if (conta instanceof ContaCorrente) {
+          conta.chequeEspecial = (updateContaDto as UpdateContaCorrenteDto).chequeEspecial;
+        }
+      }
+      if ('rendimentoMensal' in updateContaDto) {
+        if (conta instanceof ContaPoupanca) {
+          conta.rendimentoMensal = (updateContaDto as UpdateContaPoupancaDto).rendimentoMensal;
+        }
+      }
       return conta;
     }
     return undefined;
