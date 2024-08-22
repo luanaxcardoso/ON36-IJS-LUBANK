@@ -116,8 +116,8 @@ npm install @nestjs/axios
 │   ├── 
 ├── Application/
 │   ├── 
-│   ├──> Services/
-│   ├── 
+│   ├──> DTOs/
+│   ├──> Services/ 
 ├── Domain/
 │   ├── enums/
 │   ├── factories/
