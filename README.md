@@ -43,7 +43,7 @@ http://localhost:3000
 ### Semana 05
 - ✅ **Estratégias de Testes**
 ### Semana 06
-- 🔲 **Arquitetura**
+- ✅ **Arquitetura**
 ### Semana 07
 - 🔲 **Projeto Guiado**
 ### Semana 08

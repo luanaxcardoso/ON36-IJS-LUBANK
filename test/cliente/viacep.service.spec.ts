@@ -2,48 +2,49 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClienteService } from '../../src/application/services/cliente.service';
 import { ContaService } from '../../src/application/services/conta.service';
 import { ViaCepService } from '../../src/application/services/viacep.service';
-import { CreateClienteDto } from '../../src/application/dto/cliente/create-cliente.dto';
-
+import { ViaCepModule } from '../../src/modules/viacep.module'; 
 
 const mockContaService = {
   obterConta: jest.fn(),
 };
 
-const mockClienteService = {
-  adicionarCliente: jest.fn(),
-  obterCliente: jest.fn(),
-  associarConta: jest.fn(),
-};
-
 const mockViaCepService = {
-  consultarCep: jest.fn(),
+  consultarCep: jest.fn().mockResolvedValue({
+    logradouro: 'Rua das Flores, 123',
+    bairro: 'Centro',
+    cidade: 'São Paulo',
+    uf: 'SP',
+    cep: '12246001',
+  }),
 };
 
 describe('ClienteService', () => {
   let clienteService: ClienteService;
   let contaService: ContaService;
+  let viaCepService: ViaCepService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ViaCepModule], 
       providers: [
         ClienteService,
         { provide: ContaService, useValue: mockContaService },
-        { provide: ViaCepService, useValue: mockViaCepService },
+        { provide: ViaCepService, useValue: mockViaCepService }, 
       ],
     }).compile();
 
     clienteService = module.get<ClienteService>(ClienteService);
+    viaCepService = module.get<ViaCepService>(ViaCepService);
     contaService = module.get<ContaService>(ContaService);
   });
 
-  it('deve associar uma conta a um cliente existente', async () => {
-    const cliente: CreateClienteDto = {
-      id: 1,
+  it('Deve adicionar um cliente com CEP 12246001', async () => {
+    const cliente = {
       nome: 'Luana Cardoso',
       dataNascimento: '1987-08-06',
-      email: 'luana@example.com',
-      telefone: '11999999999',
-      endereco: 'Rua Exemplo',
+      email: 'luana@gmail.com',
+      telefone: '12997999979',
+      endereco: 'Rua das Flores, 123',
       cidade: 'São Paulo',
       estado: 'SP',
       cep: '12246001',
@@ -53,17 +54,9 @@ describe('ClienteService', () => {
       conta: [],
     };
 
-    const conta = { id: 1, saldo: 1000 };
-
-    mockClienteService.adicionarCliente.mockResolvedValue(cliente);
-    mockClienteService.obterCliente.mockResolvedValue(cliente);
-    mockContaService.obterConta.mockResolvedValue(conta);
-
     await clienteService.adicionarCliente(cliente);
-
-    const resultado = await clienteService.associarConta(cliente.id, conta.id);
-
-    expect(resultado).toBe(true);
-    expect(cliente.conta).toContain(conta);
+    const clientes = await clienteService.buscarClientes();
+    expect(clientes).toContainEqual(cliente);
   });
+
 });

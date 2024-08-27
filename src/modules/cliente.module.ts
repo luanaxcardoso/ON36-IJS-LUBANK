@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
-import { ClienteService } from '../services/cliente.service';
-import { ClienteController } from '../controllers/cliente.controller';
-import { ContaModule } from '../modules/conta.module';
-import { ContaService } from '../services/conta.service';
+import { HttpModule } from '@nestjs/axios';
+import { ClienteService } from '../application/services/cliente.service';
+import { ClienteController } from '../adapters/controllers/cliente.controller';
+import { ViaCepService } from '../application/services/viacep.service'; 
+import { ViaCepModule } from '../modules/viacep.module';
+import { ContaModule } from './conta.module';
+import { ContaService } from '../application/services/conta.service';
 
 @Module({
-  imports: [ContaModule],
+  imports: [HttpModule, ContaModule, ViaCepModule],
   controllers: [ClienteController],
-  providers: [ClienteService, ContaService],
+  providers: [ClienteService, ViaCepService, ContaService],
+  exports: [ClienteService, ViaCepService],
 })
 export class ClienteModule {}

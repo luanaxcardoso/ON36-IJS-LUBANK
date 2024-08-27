@@ -1,7 +1,7 @@
-import { Conta } from '../models/contas/conta.model';
+import { Conta } from '../../domain/models/contas/conta.model';
 
 export interface InterfacePessoa {
-  id: number;
+  id?: number;
   nome: string;
   dataNascimento: string;
   email: string;
@@ -9,6 +9,7 @@ export interface InterfacePessoa {
   endereco: string;
   cidade: string;
   estado: string;
+  cep: string;
   cpf: string;
   rendaSalarial?: number;
   statusAtivo?: boolean;

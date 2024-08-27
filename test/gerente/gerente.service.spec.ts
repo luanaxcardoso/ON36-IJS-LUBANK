@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GerenteService } from '../../src/services/gerente.service';
-import { Gerente } from '../../src/models/gerente.model';
+import { GerenteService } from '../../src/application/services/gerente.service';
+import { Gerente } from '../../src/domain/models/gerente.model';
+import { CreateGerenteDto } from '../../src/application/dto/gerente/create-gerente.dto';
+import { UpdateGerenteDto } from '../../src/application/dto/gerente/update-gerente.dto';
 
 describe('GerenteService', () => {
   let service: GerenteService;
@@ -14,46 +16,48 @@ describe('GerenteService', () => {
     service = module.get<GerenteService>(GerenteService);
   });
 
-  it('Deve criar um gerente', async () => {
-    const gerente: Gerente = new Gerente(
-      1,
-      'Bernadete Alves',
-      '1956-05-17',
-      'bernadete@gmail.com',
-      '12 98765-4321',
-      'Rua das Flores, 1232',
-      'São Paulo',
-      'SP',
-      '123.456.789-00',
-      5000,
-      true,
-    );
+  it('Deve criar e atualizar um gerente', async () => {
+    const createGerenteDto: CreateGerenteDto = {
+      nome: 'Bernadete Alves',
+      dataNascimento: '1956-05-17',
+      email: 'bernadete@gmail.com',
+      telefone: '12 98765-4321',
+      endereco: 'Rua das Flores, 1232',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cpf: '12345678900',
+      cep: '12246001',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+    };
 
-    const criado = await service.criarGerente(gerente);
+    const criado = await service.criarGerente(createGerenteDto);
     gerenteId = criado.id;
 
-    const atualizado = await service.atualizarGerente(gerenteId, {
+    const updateGerenteDto: UpdateGerenteDto = {
       nome: 'Bernadete Serafim Alves',
-    });
+    };
+
+    const atualizado = await service.atualizarGerente(gerenteId, updateGerenteDto);
     expect(atualizado?.nome).toBe('Bernadete Serafim Alves');
   });
 
   it('Deve deletar um gerente', async () => {
-    const gerente: Gerente = new Gerente(
-      2,
-      'Bernadete Alves',
-      '1956-05-17',
-      'bernadete@gmail.com',
-      '12 98765-4321',
-      'Rua das Flores, 1232',
-      'São Paulo',
-      'SP',
-      '123.456.789-00',
-      5000,
-      true,
-    );
+    const createGerenteDto: CreateGerenteDto = {
+      nome: 'Bernadete Alves',
+      dataNascimento: '1956-05-17',
+      email: 'bernadete@gmail.com',
+      telefone: '12 98765-4321',
+      endereco: 'Rua das Flores, 1232',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cpf: '12345678900',
+      cep: '12246001',
+      rendaSalarial: 5000,
+      statusAtivo: true,
+    };
 
-    const criado = await service.criarGerente(gerente);
+    const criado = await service.criarGerente(createGerenteDto);
     const idGerente = criado.id;
     const gerenteExistente = await service.buscarGerente(idGerente);
     expect(gerenteExistente).toBeDefined();

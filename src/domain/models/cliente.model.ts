@@ -1,5 +1,5 @@
-import { Conta } from '../models/contas/conta.model';
-import { InterfacePessoa } from '../interfaces/pessoa.interface';
+import { Conta } from './contas/conta.model';
+import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
 
 export class Cliente implements InterfacePessoa {
   constructor(
@@ -11,10 +11,10 @@ export class Cliente implements InterfacePessoa {
     public endereco: string,
     public cidade: string,
     public estado: string,
+    public cep: string,
     public cpf: string,
     public rendaSalarial: number,
     public statusAtivo: boolean,
-    public conta: Conta[] = []
-  ){}
-  
+    public conta: Conta[] = [],
+  ) {}
 }
