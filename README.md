@@ -45,7 +45,7 @@ http://localhost:3000
 ### Semana 06
 - ✅ **Arquitetura**
 ### Semana 07
-- 🔲 **Projeto Guiado**
+- ✅ **Projeto Guiado**
 ### Semana 08
 - 🔲 **Banco de Dados**
 ### Semana 09
