@@ -6,11 +6,14 @@ import { ViaCepService } from '../application/services/viacep.service';
 import { ViaCepModule } from '../modules/viacep.module';
 import { ContaModule } from './conta.module';
 import { ContaService } from '../application/services/conta.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Cliente } from 'src/db/entities/cliente.entity';
+import { ClienteRepository } from 'src/db/repositories/cliente.repository';
 
 @Module({
-  imports: [HttpModule, ContaModule, ViaCepModule],
+  imports: [HttpModule, ContaModule, ViaCepModule, TypeOrmModule.forFeature([Cliente])],
   controllers: [ClienteController],
-  providers: [ClienteService, ViaCepService, ContaService],
-  exports: [ClienteService, ViaCepService],
+  providers: [ClienteService, ViaCepService, ContaService, ClienteRepository],
+  exports: [ClienteService, ViaCepService, ClienteRepository],
 })
 export class ClienteModule {}

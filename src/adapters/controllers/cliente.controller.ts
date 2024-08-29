@@ -5,17 +5,17 @@ import {
   Get,
   Param,
   Patch,
-  NotFoundException,
   Delete,
-  ParseIntPipe,
   Query,
+  ParseIntPipe,
   BadRequestException,
   ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ClienteService } from '../../application/services/cliente.service';
 import { CreateClienteDto } from '../../application/dto/cliente/create-cliente.dto';
 import { UpdateClienteDto } from '../../application/dto/cliente/update-cliente.dto';
-import { InterfacePessoa } from '../../domain/interfaces/pessoa.interface';
+import { Cliente } from '../../db/entities/cliente.entity'; // Atualizado para usar Cliente
 import { ViaCepService } from '../../application/services/viacep.service';
 
 @Controller('cliente')
@@ -26,12 +26,9 @@ export class ClienteController {
   ) {}
 
   @Post('adicionar')
-  async adicionarCliente(@Body() clienteDto: CreateClienteDto) {
+  async adicionarCliente(@Body() clienteDto: CreateClienteDto): Promise<Cliente> {
     try {
-      const clienteAdicionado = await this.clienteService.adicionarCliente(
-        clienteDto,
-      );
-      return clienteAdicionado;
+      return await this.clienteService.adicionarCliente(clienteDto);
     } catch (error) {
       if (
         error instanceof BadRequestException ||
@@ -46,8 +43,8 @@ export class ClienteController {
   @Get(':id')
   async buscarCliente(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<InterfacePessoa> {
-    const cliente = this.clienteService.buscarCliente(id);
+  ): Promise<Cliente> { // Atualizado para usar Cliente
+    const cliente = await this.clienteService.buscarCliente(id);
     if (!cliente) {
       throw new NotFoundException(`Cliente com ID ${id} não encontrado.`);
     }
@@ -55,7 +52,7 @@ export class ClienteController {
   }
 
   @Get()
-  async buscarClientes() {
+  async buscarClientes(): Promise<Cliente[]> {
     console.log(`Todos os clientes.`);
     return this.clienteService.buscarClientes();
   }
@@ -64,7 +61,7 @@ export class ClienteController {
   async atualizarCliente(
     @Param('id', ParseIntPipe) id: number,
     @Body() atualizarCliente: UpdateClienteDto,
-  ) {
+  ): Promise<Cliente> {
     return this.clienteService.atualizarCliente(id, atualizarCliente);
   }
 
@@ -75,20 +72,68 @@ export class ClienteController {
   }
 
   @Post('associarconta')
-  async associarConta(@Body() body: { clienteId: number; contaId: number }) {
+  async associarConta(@Body() body: { clienteId: number; contaId: number }): Promise<boolean> {
     return this.clienteService.associarConta(body.clienteId, body.contaId);
   }
 
-  @Get('testarviacep')
-  async testarViaCep(@Query('cep') cep: string) {
-    console.log(`Consultando CEP: ${cep}`);
-    try {
-      const resultado = await this.viaCepService.consultarCep(cep);
-      console.log('Resultado da consulta:', resultado);
-      return resultado;
-    } catch (error) {
-      console.error('Erro ao consultar CEP:', error);
-      throw error;
-    }
+  @Get('consultarcep/:id')
+  async consultarCep(@Param('id', ParseIntPipe) clienteId: number): Promise<any> {
+    return this.clienteService.consultarCep(clienteId);
+  }
+
+  @Get('status')
+  async encontrarPorStatus(): Promise<Cliente[]> {
+    return this.clienteService.encontrarPorStatus();
+  }
+
+  @Get('cidade')
+  async encontrarPorCidade(@Query('cidade') cidade: string): Promise<Cliente[]> {
+    return this.clienteService.encontrarPorCidade(cidade);
+  }
+
+  @Get('estado')
+  async encontrarPorEstado(@Query('estado') estado: string): Promise<Cliente[]> {
+    return this.clienteService.encontrarPorEstado(estado);
+  }
+
+  @Patch('desativar/:id')
+  async desativarCliente(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.clienteService.desativarCliente(id);
+  }
+
+  @Patch('ativar/:id')
+  async ativarCliente(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.clienteService.ativarCliente(id);
+  }
+
+  @Patch('atualizarrenda/:id')
+  async atualizarRenda(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('rendaSalarial') rendaSalarial: number,
+  ): Promise<void> {
+    await this.clienteService.atualizarRenda(id, rendaSalarial);
+  }
+
+  @Get('faixarenda')
+  async encontrarPorFaixaDeRenda(
+    @Query('min') minRenda: number,
+    @Query('max') maxRenda: number,
+  ): Promise<Cliente[]> {
+    return this.clienteService.encontrarPorFaixaDeRenda(minRenda, maxRenda);
+  }
+
+  @Get('contas')
+  async encontrarPorContas(): Promise<Cliente[]> {
+    return this.clienteService.encontrarPorContas();
+  }
+
+  @Get('ativo/:id')
+  async clienteAtivo(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
+    return this.clienteService.clienteAtivo(id);
+  }
+
+  @Get('cep')
+  async encontrarPorCep(@Query('cep') cep: string): Promise<Cliente[]> {
+    return this.clienteService.encontrarPorCep(cep);
   }
 }
