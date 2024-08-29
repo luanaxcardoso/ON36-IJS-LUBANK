@@ -1,0 +1,12 @@
+version: '27.1.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: lubank-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 
+      POSTGRES_DB: lubank
