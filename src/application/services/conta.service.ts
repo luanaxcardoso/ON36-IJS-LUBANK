@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Conta } from '../../domain/models/contas/conta.model';
+import { Conta } from '../../db/entities/conta.entity';
 import { TipoConta } from '../../domain/enums/tiposconta.enum';
 import { ContaCorrenteFactory } from '../../domain/factories/contacorrente.factory';
 import { ContaPoupancaFactory } from '../../domain/factories/contapoupanca.factory';
@@ -9,8 +9,8 @@ import { CreateContaCorrenteDto } from '../dto/conta/contacorrente/create-conta-
 import { CreateContaPoupancaDto } from '../dto/conta/contapoupanca/create-poupanca.dto';
 import { UpdateContaCorrenteDto } from '../dto/conta/contacorrente/update-conta-corrente.dto';
 import { UpdateContaPoupancaDto } from '../dto/conta/contapoupanca/update-poupanca.dto';
-import { ContaCorrente } from '../../domain/models/contas/contacorrente.model';
-import { ContaPoupanca } from '../../domain/models/contas/contapoupanca.model';
+import { ContaCorrente } from '../../db/entities/contacorrente.entity';
+import { ContaPoupanca } from '../../db/entities/contapoupanca.entity';
 
 @Injectable()
 export class ContaService {
@@ -21,12 +21,12 @@ export class ContaService {
     switch (contaDto.tipo) {
       case TipoConta.CONTA_CORRENTE:
         conta = ContaCorrenteFactory.criarContaCorrente(
-          contaDto as unknown as CreateContaCorrenteDto
+          contaDto as unknown as CreateContaCorrenteDto,
         );
         break;
       case TipoConta.CONTA_POUPANCA:
         conta = ContaPoupancaFactory.criarContaPoupanca(
-          contaDto as unknown as CreateContaPoupancaDto
+          contaDto as unknown as CreateContaPoupancaDto,
         );
         break;
       default:
@@ -45,21 +45,27 @@ export class ContaService {
     return this.contas;
   }
 
-  async atualizarConta(id: number, updateContaDto: UpdateContaDto): Promise<Conta | undefined> {
+  async atualizarConta(
+    id: number,
+    updateContaDto: UpdateContaDto,
+  ): Promise<Conta | undefined> {
     const conta = this.contas.find((c) => c.id === id);
     if (conta) {
       if (updateContaDto.tipo) {
         conta.tipo = updateContaDto.tipo;
       }
       if ('chequeEspecial' in updateContaDto) {
-       
         if (conta instanceof ContaCorrente) {
-          conta.chequeEspecial = (updateContaDto as UpdateContaCorrenteDto).chequeEspecial;
+          conta.chequeEspecial = (
+            updateContaDto as UpdateContaCorrenteDto
+          ).chequeEspecial;
         }
       }
       if ('rendimentoMensal' in updateContaDto) {
         if (conta instanceof ContaPoupanca) {
-          conta.rendimentoMensal = (updateContaDto as UpdateContaPoupancaDto).rendimentoMensal;
+          conta.rendimentoMensal = (
+            updateContaDto as UpdateContaPoupancaDto
+          ).rendimentoMensal;
         }
       }
       return conta;

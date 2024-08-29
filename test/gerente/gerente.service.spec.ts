@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GerenteService } from '../../src/application/services/gerente.service';
-import { Gerente } from '../../src/domain/models/gerente.model';
+import { Gerente } from '../../src/db/entities/gerente.entity';
 import { CreateGerenteDto } from '../../src/application/dto/gerente/create-gerente.dto';
 import { UpdateGerenteDto } from '../../src/application/dto/gerente/update-gerente.dto';
 
@@ -38,7 +38,10 @@ describe('GerenteService', () => {
       nome: 'Bernadete Serafim Alves',
     };
 
-    const atualizado = await service.atualizarGerente(gerenteId, updateGerenteDto);
+    const atualizado = await service.atualizarGerente(
+      gerenteId,
+      updateGerenteDto,
+    );
     expect(atualizado?.nome).toBe('Bernadete Serafim Alves');
   });
 

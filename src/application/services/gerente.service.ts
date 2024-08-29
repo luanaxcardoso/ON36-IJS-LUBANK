@@ -3,8 +3,8 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { Gerente } from '../../domain/models/gerente.model';
-import { Cliente } from '../../domain/models/cliente.model';
+import { Gerente } from '../../db/entities/gerente.entity';
+import { Cliente } from '../../db/entities/cliente.entity';
 import { CreateGerenteDto } from '../dto/gerente/create-gerente.dto';
 import { UpdateGerenteDto } from '../dto/gerente/update-gerente.dto';
 
@@ -13,23 +13,28 @@ export class GerenteService {
   private gerentes: Gerente[] = [];
 
   async criarGerente(createGerenteDto: CreateGerenteDto): Promise<Gerente> {
-    const gerenteExistente = this.gerentes.find((g) => g.email === createGerenteDto.email);
+    const gerenteExistente = this.gerentes.find(
+      (g) => g.email === createGerenteDto.email,
+    );
     if (gerenteExistente) {
-      throw new ConflictException(`Gerente com email ${createGerenteDto.email} já existe.`);
+      throw new ConflictException(
+        `Gerente com email ${createGerenteDto.email} já existe.`,
+      );
     }
 
     const novoGerente: Gerente = {
       ...createGerenteDto,
-      id: this.gerentes.length > 0
-        ? this.gerentes[this.gerentes.length - 1].id + 1
-        : 1,
+      id:
+        this.gerentes.length > 0
+          ? this.gerentes[this.gerentes.length - 1].id + 1
+          : 1,
       clientes: [],
       contas: [],
       adicionarCliente: function (cliente: Cliente): void {
         throw new Error('Function not implemented.');
-      }
+      },
     };
-    
+
     console.log('Criando gerente:', novoGerente);
     this.gerentes.push(novoGerente);
     console.log('Gerente após criação:', this.gerentes);
@@ -59,7 +64,6 @@ export class GerenteService {
 
     const gerente = this.gerentes[gerenteIndex];
 
-    
     Object.assign(gerente, updateGerenteDto);
 
     this.gerentes[gerenteIndex] = gerente;

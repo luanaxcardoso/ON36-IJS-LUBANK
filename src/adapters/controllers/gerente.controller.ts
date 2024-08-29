@@ -11,8 +11,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { GerenteService } from '../../application/services/gerente.service';
-import { Gerente } from '../../domain/models/gerente.model';
-import { Cliente } from '../../domain/models/cliente.model';
+import { Gerente } from '../../db/entities/gerente.entity';
+import { Cliente } from '../../db/entities/cliente.entity';
 import { CreateGerenteDto } from '../../application/dto/gerente/create-gerente.dto';
 import { UpdateGerenteDto } from '../../application/dto/gerente/update-gerente.dto';
 
@@ -29,9 +29,7 @@ export class GerenteController {
   }
 
   @Get(':id')
-  async buscarGerente(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Gerente> {
+  async buscarGerente(@Param('id', ParseIntPipe) id: number): Promise<Gerente> {
     console.log('Recebendo pedido para buscar gerente com id:', id);
 
     if (!id || isNaN(id)) {
@@ -67,7 +65,10 @@ export class GerenteController {
       throw new BadRequestException('ID inválido');
     }
 
-    const gerenteAtualizado = await this.gerenteService.atualizarGerente(id, updateGerenteDto);
+    const gerenteAtualizado = await this.gerenteService.atualizarGerente(
+      id,
+      updateGerenteDto,
+    );
 
     if (!gerenteAtualizado) {
       throw new NotFoundException(`Gerente com ID ${id} não encontrado`);

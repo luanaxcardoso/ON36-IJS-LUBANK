@@ -12,16 +12,14 @@ import {
 import { ContaService } from '../../application/services/conta.service';
 import { CreateContaDto } from '../../application/dto/conta/create-conta.dto';
 import { UpdateContaDto } from '../../application/dto/conta/update-conta.dto';
-import { Conta } from '../../domain/models/contas/conta.model';
+import { Conta } from '../../db/entities/conta.entity';
 
 @Controller('conta')
 export class ContaController {
   constructor(private readonly contaService: ContaService) {}
 
   @Post('criar')
-  async criarConta(
-    @Body() createContaDto: CreateContaDto,
-  ): Promise<Conta> {
+  async criarConta(@Body() createContaDto: CreateContaDto): Promise<Conta> {
     return this.contaService.criarConta(createContaDto);
   }
 
@@ -52,7 +50,9 @@ export class ContaController {
   }
 
   @Delete('remover/:id')
-  async removerConta(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
+  async removerConta(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
     await this.contaService.removerConta(id);
     return { message: `Conta com ID ${id} removida com sucesso.` };
   }
@@ -62,6 +62,8 @@ export class ContaController {
     @Param('clienteId', ParseIntPipe) clienteId: number,
   ): Promise<{ message: string }> {
     await this.contaService.removerContasPorCliente(clienteId);
-    return { message: `Contas associadas ao cliente com ID ${clienteId} removidas com sucesso.` };
+    return {
+      message: `Contas associadas ao cliente com ID ${clienteId} removidas com sucesso.`,
+    };
   }
 }

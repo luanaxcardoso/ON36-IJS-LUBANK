@@ -127,3 +127,22 @@ npm install @nestjs/axios
 |── ----------------------------
 
 ---
+## Semana 07
+
+### Projeto guiado
+
+---
+
+## Semana 08
+
+### Banco de dados - TypeORM e Postgres
+
+- Instalação do TypeORM e do driver do Postgres
+
+```bash
+npm install typeorm @nestjs/typeorm
+```
+
+- Configuração do arquivo `ormconfig.json`
+
+```json

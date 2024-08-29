@@ -5,7 +5,7 @@ import { AppModule } from '../../src/app.module';
 import { GerenteService } from '../../src/application/services/gerente.service';
 import { CreateGerenteDto } from '../../src/application/dto/gerente/create-gerente.dto';
 import { UpdateGerenteDto } from '../../src/application/dto/gerente/update-gerente.dto';
-import { Gerente } from '../../src/domain/models/gerente.model';
+import { Gerente } from '../../src/db/entities/gerente.entity';
 
 const mockGerenteService = {
   criarGerente: jest.fn().mockImplementation((dto: CreateGerenteDto) => {
@@ -28,15 +28,17 @@ const mockGerenteService = {
       cpf: '123.456.789-00',
       rendaSalarial: 5000,
       statusAtivo: true,
-      contas: [], 
+      contas: [],
     } as Gerente,
   ]),
-  atualizarGerente: jest.fn().mockImplementation((id: number, dto: UpdateGerenteDto) => {
-    return {
-      id,
-      ...dto,
-    } as Gerente;
-  }),
+  atualizarGerente: jest
+    .fn()
+    .mockImplementation((id: number, dto: UpdateGerenteDto) => {
+      return {
+        id,
+        ...dto,
+      } as Gerente;
+    }),
   deletarGerente: jest.fn().mockImplementation((id: number) => {
     return { message: `Gerente com ID ${id} foi deletado` };
   }),
@@ -70,7 +72,7 @@ describe('GerenteController (e2e)', () => {
       cpf: '123.456.789-00',
       rendaSalarial: 5000,
       statusAtivo: true,
-      contas: [], 
+      contas: [],
     };
 
     const response = await supertest(app.getHttpServer())
@@ -122,7 +124,10 @@ describe('GerenteController (e2e)', () => {
       .expect(200)
       .expect('Content-Type', /json/);
 
-    expect(response.body).toHaveProperty('message', `Gerente com ID ${gerenteId} foi deletado`);
+    expect(response.body).toHaveProperty(
+      'message',
+      `Gerente com ID ${gerenteId} foi deletado`,
+    );
   });
 
   afterAll(async () => {

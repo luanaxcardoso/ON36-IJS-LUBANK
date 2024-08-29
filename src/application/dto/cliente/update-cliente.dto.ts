@@ -1,5 +1,13 @@
-import { IsOptional, IsString, IsNumber, IsBoolean, IsArray, Min, Length } from 'class-validator';
-import { Conta } from '../../../domain/models/contas/conta.model';
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsArray,
+  Min,
+  Length,
+} from 'class-validator';
+import { Conta } from '../../../db/entities/conta.entity';
 
 export class UpdateClienteDto {
   @IsOptional()
@@ -53,4 +61,3 @@ export class UpdateClienteDto {
   @IsArray({ message: 'Contas deve ser uma lista de contas.' })
   conta?: Conta[];
 }
-

@@ -1,5 +1,4 @@
-// src/domain/factories/contapoupanca.factory.ts
-import { ContaPoupanca } from '../models/contas/contapoupanca.model';
+import { ContaPoupanca } from '../../db/entities/contapoupanca.entity';
 import { CreateContaPoupancaDto } from '../../application/dto/conta/contapoupanca/create-poupanca.dto';
 import { BadRequestException } from '@nestjs/common';
 
