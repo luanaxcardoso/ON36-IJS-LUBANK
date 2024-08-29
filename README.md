@@ -47,7 +47,7 @@ http://localhost:3000
 ### Semana 07
 - ✅ **Projeto Guiado**
 ### Semana 08
-- 🔲 **Banco de Dados**
+- ✅ **Banco de Dados**
 ### Semana 09
 - 🔲 **Gestão de Erros**
 ### Semana 10

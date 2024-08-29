@@ -137,12 +137,20 @@ npm install @nestjs/axios
 
 ### Banco de dados - TypeORM e Postgres
 
-- Instalação do TypeORM e do driver do Postgres
+- Instalação e configuração do TypeORM e do Postgres
 
 ```bash
 npm install typeorm @nestjs/typeorm
+
+npm run migration:create --name=conta-table
+
+npm run migration:run
+
 ```
 
 - Configuração do arquivo `ormconfig.json`
 
 ```json
+
+---
+
