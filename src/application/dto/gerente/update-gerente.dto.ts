@@ -1,5 +1,14 @@
-import { IsOptional, IsString, IsNumber, IsBoolean, IsArray, Min, Length, ArrayNotEmpty } from 'class-validator';
-import { Conta } from '../../../domain/models/contas/conta.model';
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsArray,
+  Min,
+  Length,
+  ArrayNotEmpty,
+} from 'class-validator';
+import { Conta } from '../../../domain/entities/contas/conta.entity';
 
 export class UpdateGerenteDto {
   @IsOptional()
@@ -53,4 +62,3 @@ export class UpdateGerenteDto {
   @ArrayNotEmpty()
   contas?: Conta[];
 }
-

@@ -1,5 +1,16 @@
-import { IsNotEmpty, IsEmail, IsNumber, IsString, IsMobilePhone, Length, IsBoolean, Min, IsArray, IsOptional } from 'class-validator';
-import { Conta } from '../../../domain/models/contas/conta.model';
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsNumber,
+  IsString,
+  IsMobilePhone,
+  Length,
+  IsBoolean,
+  Min,
+  IsArray,
+  IsOptional,
+} from 'class-validator';
+import { Conta } from '../../../domain/entities/contas/conta.entity';
 import { InterfacePessoa } from '../../../domain/interfaces/pessoa.interface';
 
 export class CreateClienteDto implements InterfacePessoa {
