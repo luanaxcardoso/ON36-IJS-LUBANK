@@ -8,14 +8,16 @@ import { GerenteService } from './application/services/gerente.service';
 import { GerenteModule } from './modules/gerente.module';
 import { ContaModule } from './modules/conta.module';
 import { ViaCepService } from './application/services/viacep.service';
+import { DatabaseModule } from './modules/database.module';
 
 @Global()
 @Module({
-  imports: [   
+  imports: [  
     HttpModule,
     ClienteModule,
     GerenteModule,
     ContaModule,
+    DatabaseModule,
   ],
   controllers: [ClienteController, GerenteController],
   providers: [ClienteService, GerenteService, ViaCepService],
