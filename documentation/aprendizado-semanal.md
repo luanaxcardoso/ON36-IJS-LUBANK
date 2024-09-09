@@ -130,4 +130,21 @@ npm install @nestjs/axios
 
 ## Semana 07
 
+### Projeto Guiado
+
+---
+
+## Semana 08
+
+### Banco de Dados PostgreSQL e TypeORM
+
+- Instalações feitas:
+
+```bash
+npm install typeorm pg // para instalar o TypeORM e o driver do PostgreSQL
+npm install dotenv // para carregar variáveis de ambiente
+npm install reflect-metadata // para adicionar metadados de reflexão do TypeScript
+
+```
+
 
