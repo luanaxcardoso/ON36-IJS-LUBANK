@@ -2,7 +2,7 @@ import { Entity, Column } from 'typeorm';
 import { Conta } from './conta.entity';
 import { TipoConta } from '../../enums/tiposconta.enum';
 
-@Entity('contas_corrente')
+@Entity('contas_correntes')
 export class ContaCorrente extends Conta {
   @Column({
     type: 'decimal',
