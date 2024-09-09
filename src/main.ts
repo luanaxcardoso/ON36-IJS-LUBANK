@@ -10,7 +10,7 @@ async function bootstrap() {
     await AppDataSource.initialize();
     console.log('Data Source inicializada!');
   } catch (err) {
-    console.error('Erro durante a initialização:', err);
+    console.error('Erro durante a inicialização:', err);
     process.exit(1); 
   }
 
