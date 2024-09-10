@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { InterfacePessoa } from '../interfaces/pessoa.interface';
 import { Cliente } from './cliente.entity';
 import { Conta } from './contas/conta.entity';
@@ -41,20 +41,15 @@ export class Gerente implements InterfacePessoa {
   @Column({ default: true })
   statusAtivo: boolean;
 
-  @OneToMany(() => Cliente, cliente => cliente.gerente)
+  @ManyToMany(() => Cliente, cliente => cliente.gerente)
   clientes: Cliente[];
 
-  @OneToMany(() => Conta, conta => conta.gerente)
+  @ManyToMany(() => Conta, conta => conta.gerente)
   contas: Conta[];
 
   constructor(partial: Partial<Gerente>) {
     Object.assign(this, partial);
   }
 
-  adicionarCliente(cliente: Cliente): void {
-    if (!this.clientes) {
-      this.clientes = [];
-    }
-    this.clientes.push(cliente);
-  }
+ 
 }

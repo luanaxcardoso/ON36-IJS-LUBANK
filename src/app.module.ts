@@ -20,6 +20,8 @@ import { DatabaseModule } from './modules/database.module';
     DatabaseModule,
   ],
   controllers: [ClienteController, GerenteController],
-  providers: [ClienteService, GerenteService, ViaCepService],
+  providers: [ClienteService, GerenteService, ViaCepService,
+    
+  ],
 })
 export class AppModule {}

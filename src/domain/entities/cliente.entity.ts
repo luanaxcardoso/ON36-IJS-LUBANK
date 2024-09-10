@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
 import { Conta } from './contas/conta.entity';
 import { InterfacePessoa } from '../interfaces/pessoa.interface';
+import { Gerente } from './gerente.entity';
 
 @Entity('clientes')
 export class Cliente implements InterfacePessoa {
@@ -40,8 +41,9 @@ export class Cliente implements InterfacePessoa {
   @Column({ default: true })
   public statusAtivo: boolean;
 
-  @OneToMany(() => Conta, (conta) => conta.cliente, { cascade: true })
+  @ManyToMany(() => Conta, (conta) => conta.cliente, { cascade: true })
   public conta: Conta[]; 
 
-  gerente: any;
+  @ManyToMany(() => Gerente, (gerente) => gerente.clientes, { nullable: true }) 
+  public gerente: Gerente;
 }

@@ -15,6 +15,7 @@ const dataSourceOptions: DataSourceOptions = {
     password: process.env.DB_PASSWORD,
     entities: [Cliente, Gerente, Conta, ContaCorrente, ContaPoupanca],
     synchronize: false, 
+    
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
