@@ -1,5 +1,4 @@
-// src/domain/factories/contapoupanca.factory.ts
-import { ContaPoupanca } from '../models/contas/contapoupanca.model';
+import { ContaPoupanca } from '../entities/contas/contapoupanca.entity';
 import { CreateContaPoupancaDto } from '../../application/dto/conta/contapoupanca/create-poupanca.dto';
 import { BadRequestException } from '@nestjs/common';
 
@@ -11,6 +10,12 @@ export class ContaPoupancaFactory {
       throw new BadRequestException('Rendimento mensal não pode ser negativo');
     }
 
-    return new ContaPoupanca(id, saldo, clienteId, rendimentoMensal);
+    const contaPoupanca = new ContaPoupanca(
+      id,
+      saldo,
+      clienteId,
+      rendimentoMensal,
+    );
+    return contaPoupanca;
   }
 }

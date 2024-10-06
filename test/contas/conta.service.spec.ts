@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TipoConta } from '../../src/domain/enums/tiposconta.enum';
 import { ContaCorrenteFactory } from '../../src/domain/factories/contacorrente.factory';
 import { ContaPoupancaFactory } from '../../src/domain/factories/contapoupanca.factory';
-import { ContaCorrente } from '../../src/domain/models/contas/contacorrente.model';
-import { ContaPoupanca } from '../../src/domain/models/contas/contapoupanca.model';
+import { ContaCorrente } from '../../src/domain/entities/contas/contacorrente.entity';
+import { ContaPoupanca } from '../../src/domain/entities/contas/contapoupanca.entity';
 import { ContaService } from '../../src/application/services/conta.service';
 import { CreateContaDto } from '../../src/application/dto/conta/create-conta.dto';
 import { CreateContaCorrenteDto } from '../../src/application/dto/conta/contacorrente/create-conta-corrente.dto';
@@ -36,9 +36,11 @@ describe('ContaService', () => {
       createContaDto.id,
       createContaDto.saldo,
       createContaDto.clienteId,
-      createContaDto.chequeEspecial
+      createContaDto.chequeEspecial,
     );
-    (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(contaMock);
+    (ContaCorrenteFactory.criarContaCorrente as jest.Mock).mockReturnValue(
+      contaMock,
+    );
 
     const conta = await service.criarConta(createContaDto);
 
@@ -47,7 +49,9 @@ describe('ContaService', () => {
     expect(conta.saldo).toBe(createContaDto.saldo);
     expect(conta.clienteId).toBe(createContaDto.clienteId);
     expect(conta.tipo).toBe(TipoConta.CONTA_CORRENTE);
-    expect((conta as ContaCorrente).chequeEspecial).toBe(createContaDto.chequeEspecial);
+    expect((conta as ContaCorrente).chequeEspecial).toBe(
+      createContaDto.chequeEspecial,
+    );
   });
 
   it('Deve criar uma conta poupança', async () => {
@@ -63,9 +67,11 @@ describe('ContaService', () => {
       createContaDto.id,
       createContaDto.saldo,
       createContaDto.clienteId,
-      createContaDto.rendimentoMensal
+      createContaDto.rendimentoMensal,
     );
-    (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(contaMock);
+    (ContaPoupancaFactory.criarContaPoupanca as jest.Mock).mockReturnValue(
+      contaMock,
+    );
 
     const conta = await service.criarConta(createContaDto);
 
@@ -74,7 +80,9 @@ describe('ContaService', () => {
     expect(conta.saldo).toBe(createContaDto.saldo);
     expect(conta.clienteId).toBe(createContaDto.clienteId);
     expect(conta.tipo).toBe(TipoConta.CONTA_POUPANCA);
-    expect((conta as ContaPoupanca).rendimentoMensal).toBe(createContaDto.rendimentoMensal);
+    expect((conta as ContaPoupanca).rendimentoMensal).toBe(
+      createContaDto.rendimentoMensal,
+    );
   });
 
   it('Deve lançar um erro ao tentar criar um tipo de conta não suportado', async () => {
@@ -85,8 +93,8 @@ describe('ContaService', () => {
       clienteId: 3,
     };
 
-    await expect(service.criarConta(createContaDto))
-      .rejects
-      .toThrow('Tipo de conta não suportado: CONTA_INVALIDA');
+    await expect(service.criarConta(createContaDto)).rejects.toThrow(
+      'Tipo de conta não suportado: CONTA_INVALIDA',
+    );
   });
 });
